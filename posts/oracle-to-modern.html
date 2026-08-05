@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Migration guide from Oracle ERP/CRM to modern stack — what to keep, what to replace, how to migrate data, and common pitfalls.">
+<meta name="keywords" content="Oracle ERP, Oracle CRM, database migration, modern stack, PostgreSQL, cloud migration">
+<meta property="og:title" content="Oracle to Modern Stack: A Migration Guide">
+<meta property="og:description" content="Moving from Oracle ERP/CRM to modern alternatives. What works, what doesn't, what to keep.">
+<meta property="og:type" content="article">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/cookie.css">
+<link rel="stylesheet" href="../css/visitor.css">
+<title>Oracle to Modern Stack: A Migration Guide — M-Huzaifa Khilji</title>
+</head>
+<body>
+<div class="top">
+    <strong><a href="../index.html" style="text-decoration:none">M-Huzaifa Khilji</a></strong>
+    <div class="nav-list">
+        <a href="../blog.html">← Blog</a>
+    </div>
+</div>
+
+<h1>Oracle to Modern Stack: A Migration Guide</h1>
+<p class="sub">By <strong>M-Huzaifa Khilji</strong> � Feb 20, 2026 � 10 min read</p>
+
+<p>Oracle is powerful. It's also expensive, complex, and increasingly out of place in a world of cloud-native applications. Many organizations are moving away from Oracle — not because Oracle is bad, but because modern alternatives are good enough and fraction of the cost.</p>
+
+<p>This guide covers what actually works when migrating from Oracle.</p>
+
+<h2>Why Migrate?</h2>
+
+<ul>
+    <li><strong>Cost.</strong> Oracle licensing can cost $50K-500K/year. PostgreSQL is free.</li>
+    <li><strong>Talent.</strong> PostgreSQL/MySQL developers are more common and cheaper than Oracle DBAs.</li>
+    <li><strong>Cloud-native.</strong> Oracle doesn't fit well with modern cloud architectures.</li>
+    <li><strong>Open source.</strong> No vendor lock-in. Community-driven development.</li>
+    <li><strong>Integration.</strong> Modern tools work better with PostgreSQL/MySQL.</li>
+</ul>
+
+<h2>What to Keep</h2>
+
+<p>Not everything needs to migrate. Some Oracle components are worth keeping:</p>
+
+<ul>
+    <li><strong>Oracle CRM/ERP</strong> — if it's deeply integrated with business processes, migrate gradually</li>
+    <li><strong>Complex stored procedures</strong> — port to PostgreSQL PL/pgSQL, but test thoroughly</li>
+    <li><strong>Data warehouse</strong> — consider keeping for historical data, migrate new data to modern stack</li>
+    <li><strong>Reporting</strong> — Oracle's reporting tools might be good enough for existing reports</li>
+</ul>
+
+<h2>Migration Targets</h2>
+
+<table>
+    <tr><th>Oracle Component</th><th>Modern Alternative</th><th>Migration Difficulty</th></tr>
+    <tr><td>Oracle Database</td><td>PostgreSQL</td><td>Medium</td></tr>
+    <tr><td>Oracle DB (complex features)</td><td>PostgreSQL + extensions</td><td>Hard</td></tr>
+    <tr><td>Oracle ERP</td><td>SAP, NetSuite, custom</td><td>Very Hard</td></tr>
+    <tr><td>Oracle CRM</td><td>Salesforce, HubSpot, custom</td><td>Hard</td></tr>
+    <tr><td>Oracle BI</td><td>Metabase, Power BI, custom</td><td>Medium</td></tr>
+    <tr><td>Oracle Forms</td><td>React/Vue web app</td><td>Very Hard</td></tr>
+</table>
+
+<h2>The Migration Process</h2>
+
+<h3>Phase 1: Assessment (2-4 weeks)</h3>
+<p>Map everything. Every table, every stored procedure, every integration, every report.</p>
+
+<ul>
+    <li>Inventory all database objects</li>
+    <li>Identify Oracle-specific features in use</li>
+    <li>Map dependencies between systems</li>
+    <li>Document all integrations</li>
+    <li>Identify high-risk areas</li>
+</ul>
+
+<h3>Phase 2: Schema Migration (2-6 weeks)</h3>
+<p>Convert Oracle schema to PostgreSQL:</p>
+
+<pre><span class="cm"># Oracle → PostgreSQL differences</span>
+<span class="cm"># 1. Data types</span>
+NUMBER      → NUMERIC / INTEGER
+VARCHAR2    → VARCHAR
+DATE        → TIMESTAMP (Oracle DATE includes time!)
+CLOB        → TEXT
+BLOB        → BYTEA
+ROWNUM      → ROW_NUMBER() OVER()
+
+<span class="cm"># 2. Sequences</span>
+<span class="cm"># Oracle:</span> CREATE SEQUENCE seq_id START WITH 1 INCREMENT BY 1;
+<span class="cm"># PostgreSQL:</span> CREATE SEQUENCE seq_id START WITH 1 INCREMENT BY 1;
+<span class="cm"># (same syntax!)</span>
+
+<span class="cm"># 3. Packages → Functions</span>
+<span class="cm"># Oracle packages don't exist in PostgreSQL</span>
+<span class="cm"># Convert to schema-organized functions</span></pre>
+
+<h3>Phase 3: Data Migration (1-3 weeks)</h3>
+
+<pre><span class="cm"># Using pgloader for bulk migration</span>
+LOAD DATABASE
+    FROM oracle://user:pass@host:1521/service
+    INTO postgresql://user:pass@host:5432/dbname
+
+ALTER SCHEMA 'ORACLE_SCHEMA' RENAME TO 'public'
+
+SET work_mem to '128MB', maintenance_work_mem to '512GB';
+
+<span class="cm"># Type casting</span>
+CAST type DATE to timestamptz drop default drop not null using zero-dates-to-null,
+     type NUMBER to numeric using number-to-numeric;</pre>
+
+<h3>Phase 4: Application Migration (4-12 weeks)</h3>
+<p>This is usually the hardest part. Every query, every ORM mapping, every stored procedure call needs to change.</p>
+
+<ul>
+    <li>Update connection strings</li>
+    <li>Replace Oracle-specific SQL with PostgreSQL equivalents</li>
+    <li>Update ORM configurations</li>
+    <li>Test every integration</li>
+    <li>Update monitoring and alerting</li>
+</ul>
+
+<h3>Phase 5: Testing (2-4 weeks)</h3>
+<p>Run both systems in parallel. Compare results. This is non-negotiable.</p>
+
+<ul>
+    <li>Data integrity checks — row counts match</li>
+    <li>Query result comparison</li>
+    <li>Performance benchmarking</li>
+    <li>Integration testing</li>
+    <li>User acceptance testing</li>
+</ul>
+
+<h2>Common Pitfalls</h2>
+
+<ol>
+    <li><strong>Underestimating stored procedures.</strong> Oracle PL/SQL ≠ PostgreSQL PL/pgSQL. Every procedure needs testing.</li>
+    <li><strong>Oracle-specific features.</strong> CONNECT BY, MODEL clause, analytic functions — these don't exist in PostgreSQL.</li>
+    <li><strong>Date handling.</strong> Oracle DATE includes time. PostgreSQL DATE doesn't. This breaks things silently.</li>
+    <li><strong>Empty strings.</strong> Oracle treats empty strings as NULL. PostgreSQL doesn't.</li>
+    <li><strong>Sequences.</strong> Oracle uses SEQUENCE.NEXTVAL. PostgreSQL uses nextval('sequence_name').</li>
+</ol>
+
+<h2>Cost Comparison</h2>
+
+<table>
+    <tr><th>Item</th><th>Oracle (Annual)</th><th>PostgreSQL (Annual)</th></tr>
+    <tr><td>License</td><td>$100K-500K</td><td>$0</td></tr>
+    <tr><td>Support</td><td>$20K-100K</td><td>$0-20K (optional)</td></tr>
+    <tr><td>DBA</td><td>$120K-180K</td><td>$80K-120K</td></tr>
+    <tr><td>Infrastructure</td><td>$50K-200K</td><td>$20K-80K</td></tr>
+    <tr><td><strong>Total</strong></td><td><strong>$290K-980K</strong></td><td><strong>$100K-220K</strong></td></tr>
+</table>
+
+<p>The savings are real. But factor in migration costs — typically $50K-200K depending on complexity.</p>
+
+<hr>
+
+<p>Migration from Oracle is a multi-month project. Plan carefully, test thoroughly, and migrate gradually. The destination is worth the journey — modern stacks are cheaper, more flexible, and easier to hire for.</p>
+
+<div class="footer">
+    <span>© 2026 M-Huzaifa Khilji</span>
+    <a href="../contact.html" style="text-decoration:none;color:#999">Contact →</a>
+</div>
+<script src="../js/main.js"></script>
+<script src="../js/visitor.js"></script>
+<script src="../js/cookie.js"></script>
+</body>
+</html>

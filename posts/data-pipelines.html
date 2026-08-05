@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Data engineering guide — building reliable pipelines with Airflow, n8n, Spark. From messy CSVs to production data infrastructure.">
+<meta name="keywords" content="data engineering, ETL, Apache Spark, Airflow, n8n, data pipeline, data warehouse">
+<meta property="og:title" content="Data Engineering: From Messy CSVs to Reliable Pipelines">
+<meta property="og:description" content="Airflow, n8n, Spark — the practical stack for building data infrastructure that doesn't break.">
+<meta property="og:type" content="article">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/cookie.css">
+<link rel="stylesheet" href="../css/visitor.css">
+<title>Data Engineering: From Messy CSVs to Reliable Pipelines — M-Huzaifa Khilji</title>
+</head>
+<body>
+<div class="top">
+    <strong><a href="../index.html" style="text-decoration:none">M-Huzaifa Khilji</a></strong>
+    <div class="nav-list">
+        <a href="../blog.html">← Blog</a>
+    </div>
+</div>
+
+<h1>Data Engineering: From Messy CSVs to Reliable Pipelines</h1>
+<p class="sub">By <strong>M-Huzaifa Khilji</strong> � Apr 15, 2026 � 9 min read</p>
+
+<p>Data engineering is the unglamorous work that makes everything else possible. No dashboard works without clean data. No model trains without a pipeline. No business decision happens without reliable numbers.</p>
+
+<p>Most data projects fail not because the model is bad, but because the data pipeline is fragile. Here's how to build infrastructure that works.</p>
+
+<h2>The Data Stack</h2>
+
+<p>Every data engineering project uses some combination of these layers:</p>
+
+<table>
+    <tr><th>Layer</th><th>Tools</th><th>Purpose</th></tr>
+    <tr><td>Ingestion</td><td>Airbyte, n8n, custom scripts</td><td>Get data from sources</td></tr>
+    <tr><td>Storage</td><td>S3, GCS, data lakes</td><td>Store raw data</td></tr>
+    <tr><td>Processing</td><td>Spark, dbt, Pandas</td><td>Clean and transform</td></tr>
+    <tr><td>Orchestration</td><td>Airflow, Prefect, n8n</td><td>Schedule and monitor</td></tr>
+    <tr><td>Warehouse</td><td>BigQuery, Snowflake, PostgreSQL</td><td>Store processed data</td></tr>
+    <tr><td>Serving</td><td>APIs, dashboards, exports</td><td>Deliver to users</td></tr>
+</table>
+
+<h2>When to Use What</h2>
+
+<h3>n8n: For Simple Pipelines</h3>
+<p>If your pipeline is "pull data from API A, transform it, push to database B," n8n is perfect. Visual editor, built-in integrations, minimal code.</p>
+
+<pre><span class="cm"># n8n workflow pattern</span>
+HTTP Request → Function (transform) → Postgres Insert
+    ↓ (on error)
+Email Alert → Log to Slack</pre>
+
+<p>n8n handles 80% of data pipelines. The other 20% need Spark.</p>
+
+<h3>Apache Spark: For Heavy Lifting</h3>
+<p>When you have millions of rows, complex transformations, or need distributed processing, Spark is the answer.</p>
+
+<pre><span class="kw">from</span> pyspark.sql <span class="kw">import</span> SparkSession
+<span class="kw">from</span> pyspark.sql.functions <span class="kw">import</span> col, when, sum
+
+spark = SparkSession.builder \
+    .appName(<span class="st">"Sales Pipeline"</span>) \
+    .getOrCreate()
+
+df = spark.read.parquet(<span class="st">"s3://data-lake/sales/"</span>)
+
+<span class="cm"># Clean and transform</span>
+clean = df \
+    .filter(col(<span class="st">"amount"</span>) > <span class="st">0</span>) \
+    .withColumn(<span class="st">"region"</span>,
+        when(col(<span class="st">"country"</span>).isin(<span class="st">"US"</span>, <span class="st">"CA"</span>), <span class="st">"North America"</span>)
+        .otherwise(<span class="st">"Other"</span>))
+
+<span class="cm"># Aggregate</span>
+result = clean.groupBy(<span class="st">"region"</span>, <span class="st">"product"</span>) \
+    .agg(sum(<span class="st">"amount"</span>).alias(<span class="st">"total_revenue"</span>))
+
+result.write.parquet(<span class="st">"s3://data-lake/sales-aggregated/"</span>)</pre>
+
+<h3>Airflow: For Complex Orchestration</h3>
+<p>When pipelines depend on each other, need retry logic, or have complex scheduling, Airflow is the standard.</p>
+
+<pre><span class="kw">from</span> airflow <span class="kw">import</span> DAG
+<span class="kw">from</span> airflow.operators.python <span class="kw">import</span> PythonOperator
+<span class="kw">from</span> datetime <span class="kw">import</span> datetime
+
+<span class="kw">def</span> <span class="fn">extract</span>():
+    <span class="cm"># Pull data from API</span>
+    <span class="kw">pass</span>
+
+<span class="kw">def</span> <span class="fn">transform</span>():
+    <span class="cm"># Clean and enrich</span>
+    <span class="kw">pass</span>
+
+<span class="kw">def</span> <span class="fn">load</span>():
+    <span class="cm"># Push to warehouse</span>
+    <span class="kw">pass</span>
+
+dag = DAG(<span class="st">"daily_sales"</span>, start_date=datetime(<span class="st">2026</span>, <span class="st">1</span>, <span class="st">1</span>))
+
+extract >> transform >> load</pre>
+
+<h2>Common Failure Modes</h2>
+
+<ol>
+    <li><strong>Silent failures.</strong> Pipeline runs but produces wrong data. Always add data quality checks.</li>
+    <li><strong>Schema changes.</strong> Upstream system changes column names. Your pipeline breaks silently.</li>
+    <li><strong>Duplicate processing.</strong> Pipeline runs twice, data gets duplicated. Use idempotent operations.</li>
+    <li><strong>No monitoring.</strong> Pipeline fails at 3am, nobody knows until the dashboard is wrong.</li>
+    <li><strong>Tight coupling.</strong> One pipeline change breaks three others. Decouple your stages.</li>
+</ol>
+
+<h2>Data Quality Checklist</h2>
+
+<p>Every pipeline should check these before writing data:</p>
+
+<ul>
+    <li>Row count is within expected range</li>
+    <li>No null values in required columns</li>
+    <li>Values fall within expected ranges</li>
+    <li>No duplicate primary keys</li>
+    <li>Freshness — data is recent enough</li>
+    <li>Schema matches expected structure</li>
+</ul>
+
+<pre><span class="cm"># Simple data quality check</span>
+<span class="kw">def</span> <span class="fn">validate_data</span>(df):
+    errors = []
+    <span class="kw">if</span> df.filter(col(<span class="st">"id"</span>).isNull()).count() > <span class="st">0</span>:
+        errors.append(<span class="st">"Null IDs found"</span>)
+    <span class="kw">if</span> df.filter(col(<span class="st">"amount"</span>) < <span class="st">0</span>).count() > <span class="st">0</span>:
+        errors.append(<span class="st">"Negative amounts found"</span>)
+    <span class="kw">if</span> df.count() < <span class="st">1000</span>:
+        errors.append(<span class="st">"Suspiciously low row count"</span>)
+    <span class="kw">if</span> errors:
+        <span class="kw">raise</span> ValueError(<span class="st">f"Data quality failed: {errors}"</span>)</pre>
+
+<h2>Choosing Your Stack</h2>
+
+<table>
+    <tr><th>Scenario</th><th>Recommended Stack</th></tr>
+    <tr><td>Small team, simple data</td><td>n8n + PostgreSQL</td></tr>
+    <tr><td>Medium data, complex transformations</td><td>Airflow + dbt + BigQuery</td></tr>
+    <tr><td>Big data, distributed processing</td><td>Airflow + Spark + Delta Lake</td></tr>
+    <tr><td>Real-time requirements</td><td>Kafka + Spark Streaming</td></tr>
+    <tr><td>Startup, limited budget</td><td>n8n + PostgreSQL + dbt Cloud</td></tr>
+</table>
+
+<hr>
+
+<p>Data engineering is about reliability. Build pipelines that fail loudly, recover quickly, and produce data you can trust. The best pipeline is the one you never have to think about.</p>
+
+<div class="footer">
+    <span>© 2026 M-Huzaifa Khilji</span>
+    <a href="../contact.html" style="text-decoration:none;color:#999">Contact →</a>
+</div>
+<script src="../js/main.js"></script>
+<script src="../js/visitor.js"></script>
+<script src="../js/cookie.js"></script>
+</body>
+</html>

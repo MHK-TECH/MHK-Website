@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Building AI workflows with n8n — practical automation patterns using n8n, OpenAI, custom code nodes, and integration strategies.">
+<meta name="keywords" content="n8n, AI automation, workflow automation, OpenAI, custom code, no-code, low-code">
+<meta property="og:title" content="Building AI Workflows with n8n">
+<meta property="og:description" content="Practical automation patterns using n8n, OpenAI, and custom code nodes.">
+<meta property="og:type" content="article">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/cookie.css">
+<link rel="stylesheet" href="../css/visitor.css">
+<title>Building AI Workflows with n8n — M-Huzaifa Khilji</title>
+</head>
+<body>
+<div class="top">
+    <strong><a href="../index.html" style="text-decoration:none">M-Huzaifa Khilji</a></strong>
+    <div class="nav-list">
+        <a href="../blog.html">← Blog</a>
+    </div>
+</div>
+
+<h1>Building AI Workflows with n8n</h1>
+<p class="sub">By <strong>M-Huzaifa Khilji</strong> � Jan 12, 2026 � 6 min read</p>
+
+<p>n8n is the best tool I've found for building AI workflows. It's visual, self-hosted, and extensible. You can build complex automations without writing much code — but the real power comes from knowing when to use code nodes.</p>
+
+<h2>Why n8n?</h2>
+
+<ul>
+    <li><strong>Self-hosted.</strong> Your data stays on your server. No SaaS dependency.</li>
+    <li><strong>Visual editor.</strong> Drag and drop. See the flow. Debug visually.</li>
+    <li><strong>400+ integrations.</strong> Slack, email, databases, APIs, everything.</li>
+    <li><strong>Code when you need it.</strong> JavaScript/Python code nodes for custom logic.</li>
+    <li><strong>AI nodes built-in.</strong> OpenAI, Anthropic, local models — first-class support.</li>
+</ul>
+
+<h2>Pattern 1: Document Q&A</h2>
+
+<p>The simplest useful AI workflow: take a document, extract information, answer questions.</p>
+
+<pre>File Trigger → Read File → AI Agent → Slack/Email
+    ↓ (every new file in folder)
+    ↓
+Extract text → Chunk → OpenAI → Format answer → Send</pre>
+
+<p>Use cases:</p>
+<ul>
+    <li>Contract analysis — extract key terms from uploaded contracts</li>
+    <li>Resume screening — pull skills and experience from CVs</li>
+    <li>Invoice processing — extract amounts, dates, vendor info</li>
+</ul>
+
+<h2>Pattern 2: Data Enrichment</h2>
+
+<p>Take raw data, use AI to add context, push enriched data to your system.</p>
+
+<pre>Webhook → Get data from DB → AI enrichment → Update DB
+    ↓
+    ↓ "Enrich this customer record"
+    ↓
+    → AI generates summary, tags, risk score
+    → Updates customer record</pre>
+
+<h2>Pattern 3: Monitoring Agent</h2>
+
+<p>An AI agent that watches for changes and takes action.</p>
+
+<pre>Schedule (every hour) → Check source → Compare to previous
+    ↓ (if change detected)
+    ↓
+    AI analysis → Decide action → Execute action → Log</pre>
+
+<p>Example: Monitor competitor pricing. Every hour, scrape their pricing page. Compare to last known. If changed, AI analyzes the change and writes a Slack message.</p>
+
+<h2>Building the Workflow</h2>
+
+<p>Step by step for a document Q&A workflow:</p>
+
+<h3>Step 1: Trigger</h3>
+<p>Start with a File Trigger node. Point it at a folder. Every new file triggers the workflow.</p>
+
+<h3>Step 2: Read the file</h3>
+<p>Use the Read Binary File node. For PDFs, add a PDF extraction step. For text files, read directly.</p>
+
+<h3>Step 3: Extract text</h3>
+<pre><span class="cm">// Code node — extract text from different formats</span>
+<span class="kw">const</span> items = $input.all();
+<span class="kw">const</span> item = items[<span class="st">0</span>];
+
+<span class="kw">let</span> text = <span class="st">""</span>;
+<span class="kw">if</span> (item.binary.data.mimeType === <span class="st">"text/plain"</span>) {
+    text = item.binary.data.data;
+} <span class="kw">else if</span> (item.binary.data.mimeType === <span class="st">"application/pdf"</span>) {
+    <span class="cm">// PDF extraction handled by n8n PDF node</span>
+    text = item.json.text;
+}
+
+<span class="kw">return</span> [{ json: { text, filename: item.binary.data.fileName } }];</pre>
+
+<h3>Step 4: Chunk</h3>
+<p>Split long documents into chunks. n8n has a Split In Batches node, or use a Code node:</p>
+
+<pre><span class="cm">// Code node — chunk text</span>
+<span class="kw">const</span> text = $input.first().json.text;
+<span class="kw">const</span> chunkSize = <span class="st">1000</span>;
+<span class="kw">const</span> chunks = [];
+
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="st">0</span>; i < text.length; i += chunkSize) {
+    chunks.push({ json: { chunk: text.slice(i, i + chunkSize) } });
+}
+
+<span class="kw">return</span> chunks;</pre>
+
+<h3>Step 5: AI analysis</h3>
+<p>Use the OpenAI node. Set the system prompt to define the AI's role.</p>
+
+<h3>Step 6: Output</h3>
+<p>Send results to Slack, email, database, or another API.</p>
+
+<h2>Advanced: Custom AI Agent</h2>
+
+<p>For complex workflows, build a custom agent that can make decisions:</p>
+
+<pre><span class="cm">// Code node — AI agent with tool use</span>
+<span class="kw">const</span> tools = [
+    {
+        type: <span class="st">"function"</span>,
+        function: {
+            name: <span class="st">"search_database"</span>,
+            description: <span class="st">"Search customer database"</span>,
+            parameters: {
+                type: <span class="st">"object"</span>,
+                properties: {
+                    query: { type: <span class="st">"string"</span> }
+                }
+            }
+        }
+    }
+];
+
+<span class="cm">// The agent decides which tools to call</span>
+<span class="cm">// n8n handles the execution loop</span></pre>
+
+<h2>Common Mistakes</h2>
+
+<ul>
+    <li><strong>Too many nodes.</strong> Keep workflows simple. Each node is a failure point.</li>
+    <li><strong>No error handling.</strong> Add error branches. If AI fails, retry or alert.</li>
+    <li><strong>Unstructured prompts.</strong> Clear system prompts produce better results.</li>
+    <li><strong>No testing.</strong> Test with sample data before deploying.</li>
+    <li><strong>Ignoring costs.</strong> Monitor API usage. AI nodes aren't free.</li>
+</ul>
+
+<h2>Cost Management</h2>
+
+<table>
+    <tr><th>Model</th><th>Cost per 1K tokens</th><th>Best For</th></tr>
+    <tr><td>GPT-4o-mini</td><td>$0.00015</td><td>Simple tasks, high volume</td></tr>
+    <tr><td>GPT-4o</td><td>$0.005</td><td>Complex reasoning</td></tr>
+    <tr><td>Claude 3.5 Sonnet</td><td>$0.003</td><td>Long documents, analysis</td></tr>
+    <tr><td>Local model (Ollama)</td><td>$0</td><td>Privacy, no API dependency</td></tr>
+</table>
+
+<hr>
+
+<p>n8n is the best tool for AI automation. Start simple — one trigger, one action. Then add complexity as needed. The visual editor makes debugging easy, and the code nodes give you unlimited flexibility.</p>
+
+<div class="footer">
+    <span>© 2026 M-Huzaifa Khilji</span>
+    <a href="../contact.html" style="text-decoration:none;color:#999">Contact →</a>
+</div>
+<script src="../js/main.js"></script>
+<script src="../js/visitor.js"></script>
+<script src="../js/cookie.js"></script>
+</body>
+</html>

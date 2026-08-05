@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="The Millennium Prize Problems from a data scientist's perspective — computational approaches, neural ODEs, topological data analysis, and what these unsolvable problems teach about building models.">
+<meta name="keywords" content="Millennium Prize Problems, Riemann Hypothesis, P vs NP, Navier-Stokes, data science, machine learning, computational mathematics">
+<meta property="og:title" content="The Millennium Prize Problems: A Data Scientist's Perspective">
+<meta property="og:description" content="Why a data scientist spends time on unsolvable math problems — and what it teaches about building models.">
+<meta property="og:type" content="article">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/cookie.css">
+<link rel="stylesheet" href="../css/visitor.css">
+<title>The Millennium Prize Problems: A Data Scientist's Perspective — M-Huzaifa Khilji</title>
+</head>
+<body>
+<div class="top">
+    <strong><a href="../index.html" style="text-decoration:none">M-Huzaifa Khilji</a></strong>
+    <div class="nav-list">
+        <a href="../blog.html">← Blog</a>
+    </div>
+</div>
+
+<h1>The Millennium Prize Problems: A Data Scientist's Perspective</h1>
+<p class="sub">By <strong>M-Huzaifa Khilji</strong> � Dec 08, 2025 � 11 min read</p>
+
+<p>In 2000, the Clay Mathematics Institute announced seven problems, each carrying a $1 million prize. Six remain unsolved. These problems sit at the deepest intersections of mathematics, physics, and computer science.</p>
+
+<p>I'm not going to solve them. But I spend time on them because the work makes me better at everything else I do.</p>
+
+<h2>Why a Data Scientist Cares</h2>
+
+<p>The connection isn't obvious. Let me explain.</p>
+
+<p>Every Millennium Problem requires thinking about:</p>
+<ul>
+    <li><strong>Patterns in data</strong> — zeros of zeta functions, solutions to PDEs, rational points on curves</li>
+    <li><strong>Structure discovery</strong> — finding the underlying rules from observed behavior</li>
+    <li><strong>Computational limits</strong> — what's efficiently computable vs. what's not</li>
+    <li><strong>High-dimensional spaces</strong> — topology, geometry, functional analysis</li>
+</ul>
+
+<p>These are exactly the skills that make a data scientist effective. Working on these problems sharpens the instincts you need for building models, designing experiments, and interpreting results.</p>
+
+<h2>Problem 01: Riemann Hypothesis</h2>
+
+<h3>The Problem</h3>
+<p>All non-trivial zeros of the Riemann zeta function lie on the critical line with real part 1/2. Proving this would give us the deepest understanding of prime number distribution ever achieved.</p>
+
+<h3>Why It Matters</h3>
+<p>The zeta function encodes information about prime numbers. Every result about zeta is a result about primes. Primes are the foundation of modern cryptography. This isn't abstract math — it's the math that keeps your bank account secure.</p>
+
+<h3>The Data Science Approach</h3>
+<p>I train neural networks to detect patterns in zeta zero distributions. The first 10 trillion zeros have been computed. They all lie on the critical line. But computation isn't proof.</p>
+
+<pre><span class="cm"># Analyzing zeta zeros</span>
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> scipy <span class="kw">import</span> special
+
+<span class="cm"># First few non-trivial zeros (imaginary parts)</span>
+zeros = [<span class="st">14.134725</span>, <span class="st">21.022040</span>, <span class="st">25.010857</span>, <span class="st">30.424876</span>]
+
+<span class="cm"># Spacing distribution</span>
+spacings = np.diff(zeros)
+normalized = spacings / np.mean(spacings)
+
+<span class="cm"># Compare to random matrix theory predictions</span>
+<span class="cm"># The GUE distribution matches observed zeros</span>
+<span class="cm"># This is deep. Why do primes behave like random matrices?</span></pre>
+
+<p>The interesting finding: zeta zeros follow the same statistics as eigenvalues of random matrices. This connection between number theory and quantum physics is one of the deepest mysteries in mathematics.</p>
+
+<h2>Problem 02: P vs NP</h2>
+
+<h3>The Problem</h3>
+<p>Can every problem whose solution is verified quickly also be solved quickly? If yes (P = NP), most modern cryptography breaks. If no (P ≠ NP), we need to prove it.</p>
+
+<h3>Why It Matters</h3>
+<p>This is the central question of theoretical computer science. It determines what's computationally feasible. It affects cryptography, optimization, drug discovery, logistics — everything that involves finding solutions.</p>
+
+<h3>The Data Science Approach</h3>
+<p>I study SAT solvers. Boolean satisfiability is the canonical NP-complete problem. Modern SAT solvers can solve instances with millions of variables. Why?</p>
+
+<pre><span class="cm"># SAT solver benchmarking</span>
+<span class="kw">from</span> pysat.solvers <span class="kw">import</span> Glucose3
+
+<span class="cm"># Random 3-SAT has a phase transition</span>
+<span class="cm"># Below 4.267 clauses/variable: usually satisfiable</span>
+<span class="cm"># Above: usually unsatisfiable</span>
+<span class="cm"># At the threshold: hardest instances</span>
+
+<span class="kw">def</span> <span class="fn">generate_3sat</span>(n_vars, n_clauses):
+    <span class="cm"># Generate random 3-SAT instance</span>
+    clauses = []
+    <span class="kw">for</span> _ <span class="kw">in</span> range(n_clauses):
+        clause = random.sample(range(<span class="st">1</span>, n_vars + <span class="st">1</span>), <span class="st">3</span>)
+        clause = [c * random.choice([<span class="st">1</span>, -<span class="st">1</span>]) <span class="kw">for</span> c <span class="kw">in</span> clause]
+        clauses.append(clause)
+    <span class="kw">return</span> clauses
+
+<span class="cm"># Measure solver performance across phase transition</span></pre>
+
+<p>The phase transition is where the interesting physics happens. SAT solvers struggle most at the boundary between satisfiable and unsatisfiable. Understanding why could give us insights into the P vs NP question.</p>
+
+<h2>Problem 03: Navier-Stokes</h2>
+
+<h3>The Problem</h3>
+<p>Do smooth solutions always exist for the Navier-Stokes equations in three dimensions? These equations describe fluid flow — water, air, blood, plasma. Every weather prediction, every aircraft design, every blood flow simulation depends on them.</p>
+
+<h3>Why It Matters</h3>
+<p>Turbulence is physics' deepest unsolved mystery. We can simulate it approximately, but we don't understand it fundamentally. A proof would revolutionize computational fluid dynamics.</p>
+
+<h3>The Data Science Approach</h3>
+<p>Physics-informed neural networks (PINNs). I train models that respect the physics — the Navier-Stokes equations are part of the loss function.</p>
+
+<pre><span class="cm"># Physics-Informed Neural Network for Navier-Stokes</span>
+<span class="kw">import</span> torch
+<span class="kw">import</span> torch.nn <span class="kw">as</span> nn
+
+<span class="kw">class</span> <span class="fn">PINN</span>(nn.Module):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(<span class="st">3</span>, <span class="st">64</span>), nn.Tanh(),
+            nn.Linear(<span class="st">64</span>, <span class="st">64</span>), nn.Tanh(),
+            nn.Linear(<span class="st">64</span>, <span class="st">64</span>), nn.Tanh(),
+            nn.Linear(<span class="st">64</span>, <span class="st">3</span>)  <span class="cm"># u, v, p</span>
+        )
+
+    <span class="kw">def</span> <span class="fn">forward</span>(self, x, y, t):
+        <span class="kw">return</span> self.net(torch.stack([x, y, t], dim=<span class="st">1</span>))
+
+    <span class="kw">def</span> <span class="fn">physics_loss</span>(self, x, y, t):
+        <span class="cm"># Automatic differentiation for derivatives</span>
+        u, v, p = self.forward(x, y, t)
+
+        <span class="cm"># Compute partial derivatives</span>
+        u_t = torch.autograd.grad(u, t, ...)[<span class="st">0</span>]
+        u_x = torch.autograd.grad(u, x, ...)[<span class="st">0</span>]
+        u_xx = torch.autograd.grad(u_x, x, ...)[<span class="st">0</span>]
+        u_yy = torch.autograd.grad(u_x, y, ...)[<span class="st">0</span>]
+
+        <span class="cm"># Navier-Stokes residual</span>
+        residual = u_t + u*u_x + v*u_y + p_x - visc*(u_xx + u_yy)
+        <span class="kw">return</span> (residual ** <span class="st">2</span>).mean()</pre>
+
+<p>The key insight: by encoding the physics into the loss function, the model can't learn unphysical solutions. It's constrained to reality.</p>
+
+<h2>Problem 04: Birch & Swinnerton-Dyer</h2>
+
+<h3>The Problem</h3>
+<p>Connect elliptic curves to L-functions. Specifically, predict the rank of an elliptic curve from its L-function behavior at s=1.</p>
+
+<h3>Why It Matters</h3>
+<p>Elliptic curves are fundamental to number theory and cryptography (ECC). Understanding their structure has implications for factoring, encryption, and algebraic geometry.</p>
+
+<h3>The Data Science Approach</h3>
+<p>Large-scale computation. I compute L-functions for thousands of elliptic curves and look for patterns that might suggest a proof strategy.</p>
+
+<pre><span class="cm"># Computing L-function coefficients</span>
+<span class="kw">from</span> sage.all <span class="kw">import</span> *
+
+<span class="cm"># For an elliptic curve E over Q</span>
+E = EllipticCurve([<span class="st">0</span>, <span class="st">0</span>, <span class="st">1</span>, <span class="st">-1</span>, <span class="st">0</span>])
+
+<span class="cm"># Compute conductor</span>
+N = E.conductor()
+
+<span class="cm"># Compute L-function coefficients</span>
+<span class="kw">for</span> p <span class="kw">in</span> prime_range(<span class="st">100</span>):
+    ap = E.ap(p)  <span class="cm"># trace of Frobenius</span>
+    <span class="cm"># L-function coefficient: a_p = p + 1 - #E(F_p)</span>
+    <span class="kw">print</span>(<span class="st">f"p={p}, a_p={ap}"</span>)</pre>
+
+<h2>Problem 05: Hodge Conjecture</h2>
+
+<h3>The Problem</h3>
+<p>Every Hodge class on a projective variety is a rational linear combination of algebraic cycle classes. This connects topology (shape) with algebraic geometry (equations).</p>
+
+<h3>The Data Science Approach</h3>
+<p>Topological data analysis (TDA). Persistent homology studies the "shape" of data — connected components, loops, voids. I apply these tools to algebraic varieties.</p>
+
+<pre><span class="cm"># Persistent homology for Hodge analysis</span>
+<span class="kw">from</span> gudhi <span class="kw">import</span> RipsComplex
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="cm"># Sample points from an algebraic variety</span>
+points = sample_variety(equation, n_points=<span class="st">1000</span>)
+
+<span class="cm"># Compute persistence diagram</span>
+rips = RipsComplex(points=points, max_edge_length=<span class="st">2.0</span>)
+st = rips.create_simplex_tree(max_dimension=<span class="st">3</span>)
+diagram = st.persistence()
+
+<span class="cm"># Analyze topological features</span>
+<span class="cm"># Betti numbers: β₀ (components), β₁ (loops), β₂ (voids)</span></pre>
+
+<h2>What I've Learned</h2>
+
+<p>Working on these problems teaches you things you can't learn from textbooks:</p>
+
+<ol>
+    <li><strong>Pattern recognition.</strong> You start seeing structure everywhere. This is the core skill of data science.</li>
+    <li><strong>Computational thinking.</strong> You learn to think about what's computable and what's not. This matters for model design.</li>
+    <li><strong>Mathematical rigor.</strong> You learn to be precise. Vague thinking doesn't work in mathematics.</li>
+    <li><strong>Intellectual humility.</strong> These problems have defeated the best minds for 25+ years. You learn to respect difficulty.</li>
+    <li><strong>Cross-domain thinking.</strong> The connections between these problems are deep. Thinking across domains leads to insights.</li>
+</ol>
+
+<h2>The Practical Takeaway</h2>
+
+<p>You don't need to work on Millennium Problems to benefit from the skills they develop. The discipline of thinking about hard, structured problems translates directly to:</p>
+
+<ul>
+    <li>Better model design — understanding what's computable</li>
+    <li>Better data analysis — finding structure in noise</li>
+    <li>Better engineering — thinking about limits and constraints</li>
+    <li>Better research — approaching problems from multiple angles</li>
+</ul>
+
+<hr>
+
+<p>The Millennium Prize Problems are humbling. They remind you that there's always something deeper. But they also show you what's possible when you combine mathematical rigor with computational tools. That's what data science is at its best.</p>
+
+<div class="footer">
+    <span>© 2026 M-Huzaifa Khilji</span>
+    <a href="../contact.html" style="text-decoration:none;color:#999">Contact →</a>
+</div>
+<script src="../js/main.js"></script>
+<script src="../js/visitor.js"></script>
+<script src="../js/cookie.js"></script>
+</body>
+</html>

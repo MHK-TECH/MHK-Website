@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="How to build a RAG pipeline that works — chunking strategies, embedding models, retrieval ranking, vector databases, and why your RAG system gives bad answers.">
+<meta name="keywords" content="RAG, retrieval augmented generation, vector database, embeddings, LangChain, chunking, semantic search">
+<meta property="og:title" content="Building a RAG Pipeline That Actually Works">
+<meta property="og:description" content="Chunking strategies, embedding models, retrieval ranking, and why your RAG system gives bad answers.">
+<meta property="og:type" content="article">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/cookie.css">
+<link rel="stylesheet" href="../css/visitor.css">
+<title>Building a RAG Pipeline That Actually Works — M-Huzaifa Khilji</title>
+</head>
+<body>
+<div class="top">
+    <strong><a href="../index.html" style="text-decoration:none">M-Huzaifa Khilji</a></strong>
+    <div class="nav-list">
+        <a href="../blog.html">← Blog</a>
+    </div>
+</div>
+
+<h1>Building a RAG Pipeline That Actually Works</h1>
+<p class="sub">By <strong>M-Huzaifa Khilji</strong> � May 22, 2026 � 7 min read</p>
+
+<p>RAG (Retrieval-Augmented Generation) sounds simple: retrieve relevant documents, feed them to an LLM, get an answer. In practice, every step has failure modes. Here's how to build one that works.</p>
+
+<h2>The Architecture</h2>
+
+<pre>┌─────────┐     ┌──────────┐     ┌──────────┐     ┌─────────┐
+│  Docs   │ ──▶ │ Chunking │ ──▶ │ Embedding│ ──▶ │ Vector  │
+│         │     │          │     │          │     │   DB    │
+└─────────┘     └──────────┘     └──────────┘     └────┬────┘
+                                                        │
+                              ┌──────────┐     ┌────────▼────┐
+                              │   LLM    │ ◀── │  Retrieval  │
+                              │  Answer  │     │   + Query   │
+                              └──────────┘     └─────────────┘</pre>
+
+<p>Four stages. Each one can fail. Let's break them down.</p>
+
+<h2>Stage 1: Chunking</h2>
+
+<p>Your documents are too long for an embedding model. You need to split them into chunks. The strategy you choose determines everything downstream.</p>
+
+<h3>Chunking Strategies</h3>
+
+<table>
+    <tr><th>Strategy</th><th>How It Works</th><th>Best For</th><th>Drawback</th></tr>
+    <tr><td>Fixed size</td><td>Every chunk is N tokens</td><td>Quick prototyping</td><td>Splits mid-sentence</td></tr>
+    <tr><td>Sentence-based</td><td>Split on sentence boundaries</td><td>General text</td><td>Ignores semantic boundaries</td></tr>
+    <tr><td>Paragraph-based</td><td>Split on double newlines</td><td>Well-formatted docs</td><td>Variable chunk sizes</td></tr>
+    <tr><td>Semantic</td><td>Split on topic changes</td><td>Research papers, reports</td><td>Slower, more complex</td></tr>
+    <tr><td>Recursive</td><td>Hierarchical splitting</td><td>Most use cases</td><td>Requires tuning separators</td></tr>
+</table>
+
+<p>The recursive character splitter is a good default:</p>
+
+<pre><span class="kw">from</span> langchain.text_splitter <span class="kw">import</span> RecursiveCharacterTextSplitter
+
+splitter = RecursiveCharacterTextSplitter(
+    chunk_size=<span class="st">500</span>,
+    chunk_overlap=<span class="st">50</span>,
+    separators=[<span class="st">"\n\n"</span>, <span class="st">"\n"</span>, <span class="st">". "</span>, <span class="st">" "</span>]
+)
+chunks = splitter.split_documents(docs)</pre>
+
+<p><strong>Rule of thumb:</strong> 500 tokens with 50 token overlap works for 80% of use cases. Start there, then tune.</p>
+
+<h2>Stage 2: Embedding</h2>
+
+<p>Each chunk gets converted to a vector (array of numbers). Similar chunks end up near each other in vector space.</p>
+
+<h3>Which Embedding Model?</h3>
+
+<table>
+    <tr><th>Model</th><th>Dimensions</th><th>Speed</th><th>Quality</th><th>Cost</th></tr>
+    <tr><td>text-embedding-3-small</td><td>1536</td><td>Fast</td><td>Good</td><td>$0.02/M tokens</td></tr>
+    <tr><td>text-embedding-3-large</td><td>3072</td><td>Medium</td><td>Best</td><td>$0.13/M tokens</td></tr>
+    <tr><td>bge-large-en</td><td>1024</td><td>Fast</td><td>Very good</td><td>Free (self-hosted)</td></tr>
+    <tr><td>nomic-embed-text</td><td>768</td><td>Fast</td><td>Good</td><td>Free (self-hosted)</td></tr>
+    <tr><td>cohere-embed-v3</td><td>1024</td><td>Fast</td><td>Very good</td><td>$0.1/M tokens</td></tr>
+</table>
+
+<p>For most projects: OpenAI's text-embedding-3-small for simplicity, or BGE-large for self-hosted.</p>
+
+<h2>Stage 3: Retrieval</h2>
+
+<p>The user asks a question. You convert it to a vector, find the most similar chunks, and return them. Simple concept. Tricky execution.</p>
+
+<h3>Retrieval Methods</h3>
+
+<ul>
+    <li><strong>Similarity search.</strong> Find chunks closest to the query vector. Fast, simple, often good enough.</li>
+    <li><strong>MMR (Maximal Marginal Relevance).</strong> Balance similarity with diversity. Avoids returning 5 nearly identical chunks.</li>
+    <li><strong>Hybrid search.</strong> Combine vector similarity with keyword matching (BM25). Best of both worlds.</li>
+    <li><strong>Reranking.</strong> Retrieve broadly, then rerank with a cross-encoder. Expensive but dramatically improves quality.</li>
+</ul>
+
+<pre><span class="cm"># Hybrid search with reranking</span>
+<span class="kw">from</span> langchain.retrievers <span class="kw">import</span> EnsembleRetriever
+<span class="kw">from</span> langchain.retrievers <span class="kw">import</span> ContextualCompressionRetriever
+<span class="kw">from</span> langchain_cohere <span class="kw">import</span> CohereRerank
+
+<span class="cm"># Step 1: Retrieve broadly</span>
+vector_retriever = vectorstore.as_retriever(search_kwargs={<span class="st">"k"</span>: <span class="st">20</span>})
+bm25_retriever = BM25Retriever(k=<span class="st">20</span>)
+
+<span class="cm"># Step 2: Combine results</span>
+ensemble = EnsembleRetriever(
+    retrievers=[vector_retriever, bm25_retriever],
+    weights=[<span class="st">0.6</span>, <span class="st">0.4</span>]
+)
+
+<span class="cm"># Step 3: Rerank</span>
+reranker = CohereRerank(model=<span class="st">"rerank-v3.5"</span>, top_n=<span class="st">5</span>)
+compression = ContextualCompressionRetriever(
+    base_compressor=reranker,
+    base_retriever=ensemble
+)</pre>
+
+<h2>Stage 4: Generation</h2>
+
+<p>You have the relevant chunks. Now you need the LLM to answer based on them.</p>
+
+<p>The prompt template matters more than you think:</p>
+
+<pre><span class="cm"># Good RAG prompt</span>
+template = <span class="st">"""Answer the question based ONLY on the context below.
+If the context doesn't contain the answer, say "I don't have
+enough information to answer this."
+
+Context:
+{context}
+
+Question: {question}
+
+Answer:"""</span></pre>
+
+<p>Key points:</p>
+<ul>
+    <li>Explicitly tell the model to use the context.</li>
+    <li>Tell it what to do when the answer isn't in the context.</li>
+    <li>Don't let it hallucinate. Force grounding.</li>
+</ul>
+
+<h2>Why Your RAG Gives Bad Answers</h2>
+
+<p>If your RAG system is giving bad answers, the problem is usually one of these:</p>
+
+<ol>
+    <li><strong>Bad chunking.</strong> The relevant information is split across chunks, so no single chunk has the answer.</li>
+    <li><strong>Bad retrieval.</strong> The embedding model doesn't understand the query semantics.</li>
+    <li><strong>Too few results.</strong> You're only retrieving 3 chunks. Try 10-20 with reranking.</li>
+    <li><strong>No reranking.</strong> The most relevant chunk isn't first. Reranking fixes this.</li>
+    <li><strong>Bad prompt.</strong> The LLM isn't being told to ground its answer in the context.</li>
+    <li><strong>Wrong model.</strong> Small models struggle with complex reasoning over retrieved context.</li>
+</ol>
+
+<h2>Vector Databases Compared</h2>
+
+<table>
+    <tr><th>Database</th><th>Type</th><th>Best For</th><th>Cost</th></tr>
+    <tr><td>Chroma</td><td>Embedded</td><td>Prototyping, small projects</td><td>Free</td></tr>
+    <tr><td>Pinecone</td><td>Managed</td><td>Production, no ops overhead</td><td>$70/mo+</td></tr>
+    <tr><td>Weaviate</td><td>Self-hosted/Managed</td><td>Hybrid search, complex queries</td><td>Free / $25/mo+</td></tr>
+    <tr><td>Qdrant</td><td>Self-hosted/Managed</td><td>Performance, filtering</td><td>Free / $25/mo+</td></tr>
+    <tr><td>pgvector</td><td>PostgreSQL extension</td><td>Already using Postgres</td><td>Free</td></tr>
+</table>
+
+<p>Start with Chroma. Move to Qdrant or Weaviate when you need production features.</p>
+
+<hr>
+
+<p>RAG is not plug-and-play. It's an engineering system with multiple interacting components. Get each stage right, measure retrieval quality separately from generation quality, and iterate.</p>
+
+<div class="footer">
+    <span>© 2026 M-Huzaifa Khilji</span>
+    <a href="../contact.html" style="text-decoration:none;color:#999">Contact →</a>
+</div>
+<script src="../js/main.js"></script>
+<script src="../js/visitor.js"></script>
+<script src="../js/cookie.js"></script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="How to design dashboards people actually use — layout principles, data selection, visual hierarchy, and avoiding the common mistakes that make dashboards unused.">
+<meta name="keywords" content="dashboard design, data visualization, Power BI, Plotly Dash, Streamlit, KPI tracking, analytics">
+<meta property="og:title" content="Designing Dashboards People Actually Use">
+<meta property="og:description" content="Most dashboards fail. Here's how to build ones that get checked daily.">
+<meta property="og:type" content="article">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/cookie.css">
+<link rel="stylesheet" href="../css/visitor.css">
+<title>Designing Dashboards People Actually Use — M-Huzaifa Khilji</title>
+</head>
+<body>
+<div class="top">
+    <strong><a href="../index.html" style="text-decoration:none">M-Huzaifa Khilji</a></strong>
+    <div class="nav-list">
+        <a href="../blog.html">← Blog</a>
+    </div>
+</div>
+
+<h1>Designing Dashboards People Actually Use</h1>
+<p class="sub">By <strong>M-Huzaifa Khilji</strong> � Mar 10, 2026 � 5 min read</p>
+
+<p>Most dashboards fail. Not because the data is wrong, but because nobody looks at them after the first week. A dashboard nobody uses is worse than no dashboard — it gives the illusion of monitoring without the reality.</p>
+
+<h2>Why Dashboards Fail</h2>
+
+<ol>
+    <li><strong>Too much information.</strong> 40 charts on one screen. The user doesn't know where to look.</li>
+    <li><strong>Wrong metrics.</strong> Tracking vanity metrics instead of actionable ones.</li>
+    <li><strong>No context.</strong> A number with no comparison is meaningless. Is $50K revenue good? Compared to what?</li>
+    <li><strong>Slow loading.</strong> A dashboard that takes 10 seconds to load won't get checked daily.</li>
+    <li><strong>No decisions attached.</strong> If looking at the dashboard doesn't change what you do, why look at it?</li>
+</ol>
+
+<h2>The One-Question Test</h2>
+
+<p>Before building any dashboard, ask: "What decision will this dashboard help someone make?" If you can't answer that clearly, don't build it.</p>
+
+<ul>
+    <li><strong>Marketing dashboard:</strong> "Which channel should I invest more in?"</li>
+    <li><strong>Sales dashboard:</strong> "Which deals need attention this week?"</li>
+    <li><strong>Operations dashboard:</strong> "Is anything about to break?"</li>
+    <li><strong>Finance dashboard:</strong> "Are we on track for the quarter?"</li>
+</ul>
+
+<h2>Layout Principles</h2>
+
+<h3>Top: Scorecards</h3>
+<p>4-5 key numbers at the top. Big font. Clear labels. These are the first things the user sees.</p>
+
+<pre>┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐
+│ Revenue  │ │   Users  │ │Conv. Rate│ │   Errors │
+│  $124K   │ │  12,847  │ │   3.2%   │ │    12    │
+│  ↑ 12%   │ │  ↑ 8%    │ │  ↓ 0.3%  │ │  ↑ 5     │
+└──────────┘ └──────────┘ └──────────┘ └──────────┘</pre>
+
+<p>Each scorecard shows: current value, comparison period, and trend direction. The user scans these in 2 seconds and knows if anything needs attention.</p>
+
+<h3>Middle: Key Charts</h3>
+<p>2-3 charts maximum. Each one answers a specific question. Not "here's all the data" — "here's the answer to your question."</p>
+
+<h3>Bottom: Details</h3>
+<p>Tables and breakdowns for when the user wants to dig deeper. This is where you put the "why" behind the numbers above.</p>
+
+<h2>What to Show vs. What to Hide</h2>
+
+<table>
+    <tr><th>Show</th><th>Hide</th></tr>
+    <tr><td>Revenue vs. target</td><td>Raw transaction log</td></tr>
+    <tr><td>Conversion funnel</td><td>Every page view</td></tr>
+    <tr><td>Error rate trend</td><td>Every individual error</td></tr>
+    <tr><td>Active users by week</td><td>Daily active users (too noisy)</td></tr>
+    <tr><td>Top 5 products</td><td>Complete product catalog</td></tr>
+</table>
+
+<h2>The Speed Rule</h2>
+
+<p>A dashboard that takes 10 seconds to load is a dashboard that doesn't get used. Speed is a feature.</p>
+
+<ul>
+    <li><strong>Pre-aggregate.</strong> Don't query raw data on every load. Build summary tables.</li>
+    <li><strong>Cache aggressively.</strong> If the data refreshes hourly, cache for 55 minutes.</li>
+    <li><strong>Lazy load.</strong> Show scorecards first, charts second, details on click.</li>
+    <li><strong>Limit data.</strong> Last 30 days, not all time. Users rarely need historical data in the main view.</li>
+</ul>
+
+<h2>Color and Visual Hierarchy</h2>
+
+<ul>
+    <li><strong>Use color sparingly.</strong> Green for good, red for bad. Everything else is gray.</li>
+    <li><strong>Consistent scale.</strong> Same color means the same thing everywhere.</li>
+    <li><strong>Size indicates importance.</strong> Bigger = more important.</li>
+    <li><strong>White space is your friend.</strong> Cluttered dashboards are unreadable dashboards.</li>
+</ul>
+
+<h2>Tools Compared</h2>
+
+<table>
+    <tr><th>Tool</th><th>Best For</th><th>Speed</th><th>Cost</th></tr>
+    <tr><td>Power BI</td><td>Enterprise, Microsoft stack</td><td>Good</td><td>$10/user/mo</td></tr>
+    <tr><td>Plotly Dash</td><td>Custom Python dashboards</td><td>Excellent</td><td>Free</td></tr>
+    <tr><td>Streamlit</td><td>Rapid prototyping</td><td>Good</td><td>Free</td></tr>
+    <tr><td>Metabase</td><td>SQL-based, self-hosted</td><td>Good</td><td>Free / $85/mo</td></tr>
+    <tr><td>Grafana</td><td>Time-series, monitoring</td><td>Excellent</td><td>Free / paid tiers</td></tr>
+</table>
+
+<p>For data science projects: Plotly Dash or Streamlit. For business users: Power BI or Metabase.</p>
+
+<hr>
+
+<p>The best dashboard is the one that changes a decision. Build for the decision, not the data. Keep it fast, keep it focused, and keep it simple.</p>
+
+<div class="footer">
+    <span>© 2026 M-Huzaifa Khilji</span>
+    <a href="../contact.html" style="text-decoration:none;color:#999">Contact →</a>
+</div>
+<script src="../js/main.js"></script>
+<script src="../js/visitor.js"></script>
+<script src="../js/cookie.js"></script>
+</body>
+</html>

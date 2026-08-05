@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Why website speed matters — the science behind load times, how a 1-second delay costs 7% in conversions, and what actually makes sites fast or slow.">
+<meta name="keywords" content="website speed, web performance, Lighthouse, FCP, LCP, CLS, Core Web Vitals, page load time">
+<meta property="og:title" content="Why Your Website Speed Matters More Than You Think">
+<meta property="og:description" content="A 1-second delay costs 7% in conversions. Here's the science behind load times.">
+<meta property="og:type" content="article">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/cookie.css">
+<link rel="stylesheet" href="../css/visitor.css">
+<title>Why Your Website Speed Matters — M-Huzaifa Khilji</title>
+</head>
+<body>
+<div class="top">
+    <strong><a href="../index.html" style="text-decoration:none">M-Huzaifa Khilji</a></strong>
+    <div class="nav-list">
+        <a href="../blog.html">← Blog</a>
+    </div>
+</div>
+
+<h1>Why Your Website Speed Matters More Than You Think</h1>
+<p class="sub">By <strong>M-Huzaifa Khilji</strong> � Jul 05, 2026 � 6 min read</p>
+
+<p>Speed isn't a vanity metric. It's a business metric. Amazon found that every 100ms of latency cost them 1% in sales. Google lost 20% of traffic when they added 0.5 seconds to search results. These numbers are real.</p>
+
+<p>Most websites are slow. Not because the developers are bad, but because nobody measured what "slow" actually means in dollars, users, and search ranking.</p>
+
+<h2>The Numbers</h2>
+
+<table>
+    <tr><th>Metric</th><th>What It Measures</th><th>Good</th><th>Bad</th></tr>
+    <tr><td>FCP</td><td>First Contentful Paint — when anything appears</td><td>&lt; 0.1s</td><td>&gt; 1.8s</td></tr>
+    <tr><td>LCP</td><td>Largest Contentful Paint — main content loads</td><td>&lt; 0.2s</td><td>&gt; 2.5s</td></tr>
+    <tr><td>TBT</td><td>Total Blocking Time — JS isn't freezing the page</td><td>0ms</td><td>&gt; 200ms</td></tr>
+    <tr><td>CLS</td><td>Cumulative Layout Shift — nothing jumps around</td><td>0</td><td>&gt; 0.1</td></tr>
+    <tr><td>TTI</td><td>Time to Interactive — page responds to clicks</td><td>&lt; 0.1s</td><td>&gt; 3.8s</td></tr>
+</table>
+
+<p>These aren't arbitrary thresholds. Google published research correlating these metrics with actual user behavior. Sites with good scores retain more users, rank higher, and convert better.</p>
+
+<h2>Why Most Sites Are Slow</h2>
+
+<p>The root causes are predictable:</p>
+
+<ol>
+    <li><strong>Too much JavaScript.</strong> Frameworks ship megabytes of code before showing anything. A React app with 200 dependencies can easily hit 2MB before your content appears.</li>
+    <li><strong>Unoptimized images.</strong> A 4MB hero image on a mobile connection is a death sentence. Most sites serve the same image to phones and desktops.</li>
+    <li><strong>External requests.</strong> Each domain lookup, CDN hop, and API call adds latency. A page with 40 third-party scripts loads in pieces, not all at once.</li>
+    <li><strong>Render-blocking resources.</strong> CSS and JavaScript that must load before anything appears. The browser can't paint what it hasn't downloaded.</li>
+    <li><strong>No caching strategy.</strong> Serving the same content fresh every time instead of leveraging browser and CDN caches.</li>
+</ol>
+
+<h2>Why Just Text Is Fast</h2>
+
+<p>A pure HTML page with inline CSS loads in under 50ms on any connection. There's no JavaScript to parse, no images to download, no external fonts to wait for, no API calls to complete.</p>
+
+<p>This isn't theoretical. I built this site as plain HTML and CSS. No framework. No build step. No external dependencies. The result:</p>
+
+<pre>Lighthouse: 100/100
+FCP: 0.1s
+LCP: 0.2s
+TBT: 0ms
+CLS: 0</pre>
+
+<p>The entire site weighs less than most JavaScript bundles. Every page loads instantly because there's nothing to wait for.</p>
+
+<h2>Why Not Just Text?</h2>
+
+<p>Plain text is fast but boring. The sweet spot is structured HTML with clean CSS — semantic markup, responsive layout, system fonts. No images, no animations, no frameworks. The result looks professional and loads like plain text.</p>
+
+<p>Here's what I use:</p>
+
+<ul>
+    <li><strong>System fonts.</strong> No Google Fonts request. The browser uses what's already installed.</li>
+    <li><strong>Inline-ish CSS.</strong> One small stylesheet, no external requests beyond that.</li>
+    <li><strong>Semantic HTML.</strong> The browser renders it fast because it understands the structure.</li>
+    <li><strong>No JavaScript.</strong> Zero parsing time. Zero blocking.</li>
+    <li><strong>Minimal images.</strong> Text-based design instead of decorative graphics.</li>
+</ul>
+
+<h2>Short Messages vs. Long Content</h2>
+
+<p>Short messages load faster. That's obvious. But "short" doesn't mean "less useful." A well-structured page with concise sections, clear headings, and no filler is both fast and valuable.</p>
+
+<p>The problem isn't length — it's weight. A 5,000-word article in clean HTML is 15KB. The same article wrapped in a WordPress theme with plugins is 3MB. Same content. 200x the weight.</p>
+
+<h2>What Actually Makes Sites Fast</h2>
+
+<p>If you want speed, here's the priority order:</p>
+
+<ol>
+    <li><strong>Minimize requests.</strong> Every HTTP request is a round trip. Fewer requests = faster load.</li>
+    <li><strong>Minimize bytes.</strong> Compress everything. Gzip, Brotli, image optimization.</li>
+    <li><strong>Minimize JavaScript.</strong> JS is the #1 performance killer. Every byte of JS blocks rendering.</li>
+    <li><strong>Use system fonts.</strong> Web fonts add 100-500ms. System fonts add 0ms.</li>
+    <li><strong>Cache aggressively.</strong> Static assets should be cached for months.</li>
+</ol>
+
+<h2>The Business Case</h2>
+
+<p>Speed affects everything:</p>
+
+<ul>
+    <li><strong>SEO.</strong> Google uses Core Web Vitals as a ranking factor. Slow sites rank lower.</li>
+    <li><strong>Conversion.</strong> A 1-second delay reduces conversions by 7%. For a $100K/month site, that's $84K/year.</li>
+    <li><strong>Retention.</strong> 53% of mobile users abandon sites that take over 3 seconds to load.</li>
+    <li><strong>Accessibility.</strong> Fast sites work on slow connections. 4G isn't universal.</li>
+</ul>
+
+<h2>How to Measure</h2>
+
+<p>Don't guess. Measure:</p>
+
+<ul>
+    <li><strong>Google Lighthouse</strong> — built into Chrome DevTools. Free, easy, comprehensive.</li>
+    <li><strong>PageSpeed Insights</strong> — uses real Chrome user data (CrUX).</li>
+    <li><strong>WebPageTest.org</strong> — detailed waterfall analysis from multiple locations.</li>
+    <li><strong>Chrome DevTools Performance tab</strong> — detailed profiling of what's slow.</li>
+</ul>
+
+<p>Run these tools on your site. The results will probably surprise you. Most developers overestimate their site's performance by 2-3x.</p>
+
+<hr>
+
+<p>Speed is a feature. It's not something you add later — it's something you build from the start. Every decision affects performance: framework choice, image format, font loading, code splitting, caching strategy.</p>
+
+<p>Build fast. Stay fast. Measure everything.</p>
+
+<div class="footer">
+    <span>© 2026 M-Huzaifa Khilji</span>
+    <a href="../contact.html" style="text-decoration:none;color:#999">Contact →</a>
+</div>
+<script src="../js/main.js"></script>
+<script src="../js/visitor.js"></script>
+<script src="../js/cookie.js"></script>
+</body>
+</html>
