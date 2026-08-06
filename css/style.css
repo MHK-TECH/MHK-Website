@@ -102,6 +102,10 @@ th{background:#f0f0f0;font-weight:700;font-size:.78rem;text-transform:uppercase;
 .promo a{font-size:.82rem;padding:6px 16px;border:1px solid #0a0a0a;border-radius:4px;text-decoration:none;color:#0a0a0a;font-weight:600;transition:all .2s}
 .promo a:hover{background:#0a0a0a;color:var(--accent)}
 
+/* ── Typing Animation ── */
+.typing::after{content:'|';animation:blink .7s infinite;color:var(--accent)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
 /* ── Icon ── */
 .icon{width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:6px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 

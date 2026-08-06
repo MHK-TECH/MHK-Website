@@ -71,4 +71,33 @@
       card.style.transform='translateY(0) rotateX(0) rotateY(0)';
     });
   });
+
+  // Typing animation
+  document.querySelectorAll('.typing').forEach(function(el){
+    var texts=JSON.parse(el.getAttribute('data-texts'));
+    var textIdx=0,charIdx=0,deleting=false;
+    function type(){
+      var current=texts[textIdx];
+      if(!deleting){
+        el.textContent=current.substring(0,charIdx+1);
+        charIdx++;
+        if(charIdx===current.length){
+          setTimeout(function(){deleting=true;type()},2000);
+          return;
+        }
+        setTimeout(type,50);
+      }else{
+        el.textContent=current.substring(0,charIdx-1);
+        charIdx--;
+        if(charIdx===0){
+          deleting=false;
+          textIdx=(textIdx+1)%texts.length;
+          setTimeout(type,500);
+          return;
+        }
+        setTimeout(type,30);
+      }
+    }
+    type();
+  });
 }();
