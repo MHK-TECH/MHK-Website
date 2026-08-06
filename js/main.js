@@ -23,11 +23,10 @@
   document.addEventListener('mousemove',function(e){
     mx=e.clientX;my=e.clientY;
     dot.style.left=mx-3+'px';dot.style.top=my-3+'px';
-    ring.style.left=mx-16+'px';ring.style.top=my-16+'px';
   });
 
   !function loop(){
-    rx+=(mx-rx)*.15;ry+=(my-ry)*.15;
+    rx+=(mx-rx)*.12;ry+=(my-ry)*.12;
     ring.style.left=rx-16+'px';ring.style.top=ry-16+'px';
     requestAnimationFrame(loop);
   }();
@@ -45,7 +44,7 @@
   var throttle=0;
   document.addEventListener('mousemove',function(e){
     throttle++;
-    if(throttle%3!==0)return;
+    if(throttle%2!==0)return;
     var t=document.createElement('div');
     t.className='trail';
     t.style.left=e.clientX-1.5+'px';t.style.top=e.clientY-1.5+'px';

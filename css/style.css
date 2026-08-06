@@ -143,6 +143,15 @@ th{background:#f0f0f0;font-weight:700;font-size:.78rem;text-transform:uppercase;
 .typing::after{content:'|';animation:blink .7s infinite;color:var(--accent)}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
+/* ── Cursor Effects ── */
+.cursor-dot{position:fixed;width:6px;height:6px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:10001;transition:transform .1s;mix-blend-mode:difference}
+.cursor-ring{position:fixed;width:32px;height:32px;border:2px solid var(--accent);border-radius:50%;pointer-events:none;z-index:10001;transition:width .3s,height .3s,border-color .3s,transform .1s;mix-blend-mode:difference}
+.cursor-ring.hover{width:48px;height:48px;border-color:#fff;background:rgba(0,255,136,.1)}
+.ripple{position:fixed;width:16px;height:16px;border:2px solid var(--accent);border-radius:50%;pointer-events:none;z-index:10000;animation:ripple-expand .5s ease-out forwards}
+@keyframes ripple-expand{0%{transform:scale(1);opacity:1}100%{transform:scale(4);opacity:0}}
+.trail{position:fixed;width:3px;height:3px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:10000;animation:trail-fade .6s ease-out forwards}
+@keyframes trail-fade{0%{opacity:.6;transform:scale(1)}100%{opacity:0;transform:scale(0)}}
+
 /* ── Icon ── */
 .icon{width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:6px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
