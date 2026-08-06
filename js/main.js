@@ -8,10 +8,11 @@
         observer.unobserve(e.target);
       }
     });
-  },{threshold:.1});
+  },{threshold:.05});
 
-  els.forEach(function(el){
+  els.forEach(function(el,i){
     el.classList.add('fade-in');
+    el.style.transitionDelay=(i%4)*.04+'s';
     observer.observe(el);
   });
 
