@@ -1,4 +1,21 @@
 !function(){
+  // Scroll animations
+  var els=document.querySelectorAll('.card,.post-list li,.promo,.skills,.contact-box,table,.fade-in');
+  var observer=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  },{threshold:.1});
+
+  els.forEach(function(el){
+    el.classList.add('fade-in');
+    observer.observe(el);
+  });
+
+  // Cursor dot + ring
   var dot=document.createElement('div'),ring=document.createElement('div'),mx=0,my=0,rx=0,ry=0;
   dot.className='cursor-dot';ring.className='cursor-ring';
   document.body.appendChild(dot);document.body.appendChild(ring);
@@ -15,6 +32,7 @@
     requestAnimationFrame(loop);
   }();
 
+  // Click ripple
   document.addEventListener('click',function(e){
     var r=document.createElement('div');
     r.className='ripple';
@@ -23,6 +41,7 @@
     setTimeout(function(){r.remove()},500);
   });
 
+  // Trail particles
   var throttle=0;
   document.addEventListener('mousemove',function(e){
     throttle++;
@@ -34,11 +53,13 @@
     setTimeout(function(){t.remove()},600);
   });
 
+  // Hover effects
   document.querySelectorAll('a,.card,.skills span,.post-list li').forEach(function(el){
     el.addEventListener('mouseenter',function(){ring.classList.add('hover')});
     el.addEventListener('mouseleave',function(){ring.classList.remove('hover')});
   });
 
+  // Card tilt
   document.querySelectorAll('.card').forEach(function(card){
     card.addEventListener('mousemove',function(e){
       var rect=card.getBoundingClientRect();
