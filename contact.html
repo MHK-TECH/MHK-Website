@@ -50,17 +50,17 @@
 <h2>Send a Message</h2>
 <form id="contactForm" style="max-width:600px">
     <div style="margin-bottom:16px">
-        <label style="display:block;font-size:.8rem;font-weight:700;margin-bottom:6px;color:#888;text-transform:uppercase;letter-spacing:.05em">Full Name</label>
-        <input type="text" name="name" required placeholder="John Doe" style="width:100%;border:1px solid #ddd;border-radius:6px;padding:10px 14px;font-family:inherit;font-size:.9rem;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--cyber)'" onblur="this.style.borderColor='#ddd'">
+        <label>Full Name</label>
+        <input type="text" name="name" required placeholder="John Doe">
     </div>
     <div style="margin-bottom:16px">
-        <label style="display:block;font-size:.8rem;font-weight:700;margin-bottom:6px;color:#888;text-transform:uppercase;letter-spacing:.05em">Email Address</label>
-        <input type="email" name="email" required placeholder="you@example.com" style="width:100%;border:1px solid #ddd;border-radius:6px;padding:10px 14px;font-family:inherit;font-size:.9rem;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--cyber)'" onblur="this.style.borderColor='#ddd'">
+        <label>Email Address</label>
+        <input type="email" name="email" required placeholder="you@example.com">
     </div>
     <div style="margin-bottom:16px">
-        <label style="display:block;font-size:.8rem;font-weight:700;margin-bottom:6px;color:#888;text-transform:uppercase;letter-spacing:.05em">Phone Number</label>
+        <label>Phone Number</label>
         <div style="display:flex;gap:8px">
-            <select name="countryCode" style="width:120px;flex-shrink:0;border:1px solid #ddd;border-radius:6px;padding:10px 8px;font-family:inherit;font-size:.9rem;outline:none;background:#fff;cursor:pointer;transition:border-color .2s" onfocus="this.style.borderColor='var(--cyber)'" onblur="this.style.borderColor='#ddd'">
+            <select name="countryCode" style="width:120px;flex-shrink:0">
                 <option value="+92">+92 (PK)</option>
                 <option value="+1">+1 (US)</option>
                 <option value="+44">+44 (UK)</option>
@@ -79,12 +79,12 @@
                 <option value="+63">+63 (PH)</option>
                 <option value="+62">+62 (ID)</option>
             </select>
-            <input type="tel" name="phone" placeholder="300 1234567" style="flex:1;border:1px solid #ddd;border-radius:6px;padding:10px 14px;font-family:inherit;font-size:.9rem;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--cyber)'" onblur="this.style.borderColor='#ddd'">
+            <input type="tel" name="phone" placeholder="300 1234567" style="flex:1">
         </div>
     </div>
     <div style="margin-bottom:16px">
-        <label style="display:block;font-size:.8rem;font-weight:700;margin-bottom:6px;color:#888;text-transform:uppercase;letter-spacing:.05em">Service Needed</label>
-        <select name="service" required style="width:100%;border:1px solid #ddd;border-radius:6px;padding:10px 14px;font-family:inherit;font-size:.9rem;outline:none;background:#fff;cursor:pointer;transition:border-color .2s" onfocus="this.style.borderColor='var(--cyber)'" onblur="this.style.borderColor='#ddd'">
+        <label>Service Needed</label>
+        <select name="service" required>
             <option value="">Select a service</option>
             <option>Data Science & Analytics</option>
             <option>AI Engineering / LLM Fine-Tuning</option>
@@ -95,8 +95,8 @@
         </select>
     </div>
     <div style="margin-bottom:16px">
-        <label style="display:block;font-size:.8rem;font-weight:700;margin-bottom:6px;color:#888;text-transform:uppercase;letter-spacing:.05em">Budget Range</label>
-        <select name="budget" style="width:100%;border:1px solid #ddd;border-radius:6px;padding:10px 14px;font-family:inherit;font-size:.9rem;outline:none;background:#fff;cursor:pointer;transition:border-color .2s" onfocus="this.style.borderColor='var(--cyber)'" onblur="this.style.borderColor='#ddd'">
+        <label>Budget Range</label>
+        <select name="budget">
             <option value="">Select budget (optional)</option>
             <option>Under $500</option>
             <option>$500 - $2,000</option>
@@ -107,10 +107,10 @@
         </select>
     </div>
     <div style="margin-bottom:16px">
-        <label style="display:block;font-size:.8rem;font-weight:700;margin-bottom:6px;color:#888;text-transform:uppercase;letter-spacing:.05em">Project Details</label>
-        <textarea name="message" required rows="6" placeholder="Tell me about your project, goals, timeline..." style="width:100%;border:1px solid #ddd;border-radius:6px;padding:10px 14px;font-family:inherit;font-size:.9rem;outline:none;resize:vertical;transition:border-color .2s" onfocus="this.style.borderColor='var(--cyber)'" onblur="this.style.borderColor='#ddd'"></textarea>
+        <label>Project Details</label>
+        <textarea name="message" required rows="6" placeholder="Tell me about your project, goals, timeline..."></textarea>
     </div>
-    <button type="submit" style="background:#0a0a0a;color:var(--accent);border:none;border-radius:6px;padding:14px 32px;font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s" onmouseenter="this.style.boxShadow='0 0 20px rgba(0,255,136,.3)'" onmouseleave="this.style.boxShadow='none'">Send Message</button>
+    <button type="submit">Send Message</button>
     <p id="formSuccess" style="display:none;color:var(--cyber);font-size:.85rem;margin-top:12px">Thanks! Your email client will open — hit send and I'll respond within 24 hours.</p>
 </form>
 
