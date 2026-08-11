@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /.env
+Disallow: /server.py
+Disallow: /requirements.txt
+
+Sitemap: https://mhk-website.vercel.app/sitemap.xml

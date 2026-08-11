@@ -1,11 +1,74 @@
 !function(){
-  // Check if already accepted
-  if(localStorage.getItem('cookiesAccepted')==='true')return;
+  // ── Visitor Tracking System ──
+
+  // Generate unique session ID
+  function getOrCreateSession(){
+    var sid=localStorage.getItem('mhk_session_id');
+    if(!sid){
+      sid='sess_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);
+      localStorage.setItem('mhk_session_id',sid);
+    }
+    return sid;
+  }
+
+  // Generate visitor ID (persistent)
+  function getOrCreateVisitor(){
+    var vid=localStorage.getItem('mhk_visitor_id');
+    if(!vid){
+      vid='vis_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);
+      localStorage.setItem('mhk_visitor_id',vid);
+    }
+    return vid;
+  }
+
+  // Get/set page view count
+  function trackPageView(){
+    var views=parseInt(localStorage.getItem('mhk_page_views')||'0');
+    views++;
+    localStorage.setItem('mhk_page_views',views);
+    return views;
+  }
+
+  // Track visit timestamp
+  function trackVisitTime(){
+    var now=new Date().toISOString();
+    localStorage.setItem('mhk_last_visit',now);
+    var first=localStorage.getItem('mhk_first_visit');
+    if(!first) localStorage.setItem('mhk_first_visit',now);
+  }
+
+  // Initialize tracking data
+  var visitorId=getOrCreateVisitor();
+  var sessionId=getOrCreateSession();
+  var pageViews=trackPageView();
+  trackVisitTime();
+
+  // Store tracking data for server
+  window.mhkAnalytics={
+    visitorId:visitorId,
+    sessionId:sessionId,
+    pageViews:pageViews,
+    referrer:document.referrer||'direct',
+    userAgent:navigator.userAgent,
+    language:navigator.language,
+    screenWidth:screen.width,
+    screenHeight:screen.height,
+    timestamp:new Date().toISOString()
+  };
+
+  // ── Cookie Consent ──
+  if(localStorage.getItem('cookiesAccepted')==='true'){
+    var consent=localStorage.getItem('cookieConsent');
+    if(consent==='all'||consent==='analytics'||(consent&&consent.indexOf('analytics')!==-1)){
+      initAnalytics();
+    }
+    return;
+  }
 
   var bar=document.createElement('div');
   bar.className='cookie-bar';
   bar.innerHTML=`
-    <div class="text">This site uses cookies to improve your experience and analyze traffic. By continuing, you agree to our use of cookies. <a href="https://www.cookiesandyou.com" target="_blank" rel="noopener">Learn more</a></div>
+    <div class="text">This site uses cookies to improve your experience, analyze traffic, and personalize content. By continuing, you agree to our use of cookies. <a href="https://www.cookiesandyou.com" target="_blank" rel="noopener">Learn more</a></div>
     <div class="btns">
       <button class="cookie-accept" id="cookieAccept">Accept All</button>
       <button class="cookie-decline" id="cookieDecline">Decline</button>
@@ -13,11 +76,8 @@
     </div>`;
 
   document.body.appendChild(bar);
-
-  // Show after short delay
   setTimeout(function(){bar.classList.add('show')},1000);
 
-  // Accept
   document.getElementById('cookieAccept').onclick=function(){
     localStorage.setItem('cookiesAccepted','true');
     localStorage.setItem('cookieConsent','all');
@@ -26,7 +86,6 @@
     initAnalytics();
   };
 
-  // Decline
   document.getElementById('cookieDecline').onclick=function(){
     localStorage.setItem('cookiesAccepted','true');
     localStorage.setItem('cookieConsent','declined');
@@ -34,7 +93,6 @@
     setTimeout(function(){bar.remove()},400);
   };
 
-  // Settings
   document.getElementById('cookieSettings').onclick=function(){
     var settings=document.createElement('div');
     settings.className='cookie-bar';
@@ -57,9 +115,7 @@
 
     bar.replaceWith(settings);
 
-    document.getElementById('cookieBack').onclick=function(){
-      location.reload();
-    };
+    document.getElementById('cookieBack').onclick=function(){location.reload()};
 
     document.getElementById('cookieSaveSettings').onclick=function(){
       var analytics=document.getElementById('cookieAnalytics').checked;
@@ -68,17 +124,58 @@
       localStorage.setItem('cookieConsent',JSON.stringify({analytics:analytics,marketing:marketing}));
       settings.classList.remove('show');
       setTimeout(function(){settings.remove()},400);
-      if(analytics)initAnalytics();
+      if(analytics) initAnalytics();
+      if(marketing) initMarketing();
     };
   };
 
-  // Simple analytics (respects consent)
   function initAnalytics(){
-    // Track page view
-    if(typeof gtag==='function'){
-      gtag('event','page_view',{page_title:document.title,page_location:window.location.href});
-    }
-    // Console log for demo
-    console.log('Analytics initialized for:',document.title);
+    console.log('[MHK Analytics] Initialized',window.mhkAnalytics);
+
+    // Track outbound affiliate link clicks
+    document.querySelectorAll('a[target="_blank"]').forEach(function(a){
+      a.addEventListener('click',function(){
+        var href=this.href;
+        if(typeof gtag==='function'){
+          gtag('event','affiliate_click',{
+            link_url:href,
+            link_text:this.textContent.trim(),
+            page:document.title
+          });
+        }
+      });
+    });
+
+    // Track scroll depth
+    var maxScroll=0;
+    window.addEventListener('scroll',function(){
+      var scroll=Math.round((window.scrollY/(document.body.scrollHeight-window.innerHeight))*100);
+      if(scroll>maxScroll){
+        maxScroll=scroll;
+        if(maxScroll%25===0&&maxScroll>0){
+          if(typeof gtag==='function'){
+            gtag('event','scroll_depth',{depth:maxScroll+'%',page:document.title});
+          }
+        }
+      }
+    });
+
+    // Track time on page
+    var startTime=Date.now();
+    window.addEventListener('beforeunload',function(){
+      var timeSpent=Math.round((Date.now()-startTime)/1000);
+      if(typeof gtag==='function'){
+        gtag('event','page_exit',{
+          time_seconds:timeSpent,
+          page:document.title,
+          scroll_depth:maxScroll+'%'
+        });
+      }
+    });
+  }
+
+  function initMarketing(){
+    console.log('[MHK Marketing] Cookies enabled');
+    // Google AdSense and remarketing will initialize here
   }
 }();

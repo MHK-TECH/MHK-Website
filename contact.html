@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/jpeg" href="logo.jpg">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Contact M-HUZAIFA KHILJI — freelance data scientist, AI engineer. Available for projects at $90-135/hr (data science) or $120-200/hr (AI/LLM).">
+<meta name="description" content="Contact M-HUZAIFA KHILJI — data scientist, AI engineer. Available for data science, AI engineering, and automation projects.">
 <meta property="og:title" content="Contact — M-HUZAIFA KHILJI">
 <meta property="og:description" content="Available for projects in AI, data science, and automation.">
 <link rel="stylesheet" href="css/style.css">
@@ -14,7 +14,7 @@
 <main id="main">
 
 <h1>Get in touch</h1>
-<p class="sub">Data science at $90-135/hr. AI/LLM at $120-200/hr. Fixed project pricing available.</p>
+<p class="sub">Have a project in mind? Fill out the form below and I'll get back to you within 24 hours.</p>
 
 <h2>Availability</h2>
 <div class="cards cards-3">
@@ -47,17 +47,89 @@
     </div>
 </div>
 
-<h2>Contact</h2>
-<div class="cards cards-2">
+<h2>Send a Message</h2>
+<form id="contactForm" style="max-width:600px">
+    <div style="margin-bottom:16px">
+        <label style="display:block;font-size:.8rem;font-weight:700;margin-bottom:6px;color:#888;text-transform:uppercase;letter-spacing:.05em">Full Name</label>
+        <input type="text" name="name" required placeholder="John Doe" style="width:100%;border:1px solid #ddd;border-radius:6px;padding:10px 14px;font-family:inherit;font-size:.9rem;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--cyber)'" onblur="this.style.borderColor='#ddd'">
+    </div>
+    <div style="margin-bottom:16px">
+        <label style="display:block;font-size:.8rem;font-weight:700;margin-bottom:6px;color:#888;text-transform:uppercase;letter-spacing:.05em">Email Address</label>
+        <input type="email" name="email" required placeholder="you@example.com" style="width:100%;border:1px solid #ddd;border-radius:6px;padding:10px 14px;font-family:inherit;font-size:.9rem;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--cyber)'" onblur="this.style.borderColor='#ddd'">
+    </div>
+    <div style="margin-bottom:16px">
+        <label style="display:block;font-size:.8rem;font-weight:700;margin-bottom:6px;color:#888;text-transform:uppercase;letter-spacing:.05em">Phone Number</label>
+        <div style="display:flex;gap:8px">
+            <select name="countryCode" style="width:120px;flex-shrink:0;border:1px solid #ddd;border-radius:6px;padding:10px 8px;font-family:inherit;font-size:.9rem;outline:none;background:#fff;cursor:pointer;transition:border-color .2s" onfocus="this.style.borderColor='var(--cyber)'" onblur="this.style.borderColor='#ddd'">
+                <option value="+92">+92 (PK)</option>
+                <option value="+1">+1 (US)</option>
+                <option value="+44">+44 (UK)</option>
+                <option value="+91">+91 (IN)</option>
+                <option value="+971">+971 (AE)</option>
+                <option value="+966">+966 (SA)</option>
+                <option value="+61">+61 (AU)</option>
+                <option value="+49">+49 (DE)</option>
+                <option value="+33">+33 (FR)</option>
+                <option value="+81">+81 (JP)</option>
+                <option value="+86">+86 (CN)</option>
+                <option value="+55">+55 (BR)</option>
+                <option value="+234">+234 (NG)</option>
+                <option value="+60">+60 (MY)</option>
+                <option value="+65">+65 (SG)</option>
+                <option value="+63">+63 (PH)</option>
+                <option value="+62">+62 (ID)</option>
+            </select>
+            <input type="tel" name="phone" placeholder="300 1234567" style="flex:1;border:1px solid #ddd;border-radius:6px;padding:10px 14px;font-family:inherit;font-size:.9rem;outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--cyber)'" onblur="this.style.borderColor='#ddd'">
+        </div>
+    </div>
+    <div style="margin-bottom:16px">
+        <label style="display:block;font-size:.8rem;font-weight:700;margin-bottom:6px;color:#888;text-transform:uppercase;letter-spacing:.05em">Service Needed</label>
+        <select name="service" required style="width:100%;border:1px solid #ddd;border-radius:6px;padding:10px 14px;font-family:inherit;font-size:.9rem;outline:none;background:#fff;cursor:pointer;transition:border-color .2s" onfocus="this.style.borderColor='var(--cyber)'" onblur="this.style.borderColor='#ddd'">
+            <option value="">Select a service</option>
+            <option>Data Science & Analytics</option>
+            <option>AI Engineering / LLM Fine-Tuning</option>
+            <option>AI Automation / Workflows</option>
+            <option>Dashboard Development</option>
+            <option>Research Collaboration</option>
+            <option>Other</option>
+        </select>
+    </div>
+    <div style="margin-bottom:16px">
+        <label style="display:block;font-size:.8rem;font-weight:700;margin-bottom:6px;color:#888;text-transform:uppercase;letter-spacing:.05em">Budget Range</label>
+        <select name="budget" style="width:100%;border:1px solid #ddd;border-radius:6px;padding:10px 14px;font-family:inherit;font-size:.9rem;outline:none;background:#fff;cursor:pointer;transition:border-color .2s" onfocus="this.style.borderColor='var(--cyber)'" onblur="this.style.borderColor='#ddd'">
+            <option value="">Select budget (optional)</option>
+            <option>Under $500</option>
+            <option>$500 - $2,000</option>
+            <option>$2,000 - $5,000</option>
+            <option>$5,000 - $10,000</option>
+            <option>$10,000+</option>
+            <option>Not sure yet</option>
+        </select>
+    </div>
+    <div style="margin-bottom:16px">
+        <label style="display:block;font-size:.8rem;font-weight:700;margin-bottom:6px;color:#888;text-transform:uppercase;letter-spacing:.05em">Project Details</label>
+        <textarea name="message" required rows="6" placeholder="Tell me about your project, goals, timeline..." style="width:100%;border:1px solid #ddd;border-radius:6px;padding:10px 14px;font-family:inherit;font-size:.9rem;outline:none;resize:vertical;transition:border-color .2s" onfocus="this.style.borderColor='var(--cyber)'" onblur="this.style.borderColor='#ddd'"></textarea>
+    </div>
+    <button type="submit" style="background:#0a0a0a;color:var(--accent);border:none;border-radius:6px;padding:14px 32px;font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s" onmouseenter="this.style.boxShadow='0 0 20px rgba(0,255,136,.3)'" onmouseleave="this.style.boxShadow='none'">Send Message</button>
+    <p id="formSuccess" style="display:none;color:var(--cyber);font-size:.85rem;margin-top:12px">Thanks! Your email client will open — hit send and I'll respond within 24 hours.</p>
+</form>
+
+<h2>Other Ways to Reach Me</h2>
+<div class="cards cards-3">
     <div class="card">
         <h3>Email</h3>
-        <p><a href="mailto:huzaifa@datascience.dev">huzaifa@datascience.dev</a></p>
-        <p style="font-size:.8rem;color:#999">Best for project details</p>
+        <p><a href="mailto:mhktechnologies1.0@gmail.com">mhktechnologies1.0@gmail.com</a></p>
+        <p style="font-size:.8rem;color:#999">Direct email</p>
     </div>
     <div class="card">
         <h3>LinkedIn</h3>
         <p><a href="https://www.linkedin.com/in/muhammad-huzaifa-khilji-955320159/" target="_blank" rel="noopener">Connect on LinkedIn</a></p>
         <p style="font-size:.8rem;color:#999">Let's connect</p>
+    </div>
+    <div class="card">
+        <h3>Location</h3>
+        <p>Lahore, Pakistan</p>
+        <p style="font-size:.8rem;color:#999">Available worldwide (remote)</p>
     </div>
 </div>
 
@@ -66,37 +138,48 @@
     <li>Data Science and Analytics</li>
     <li>AI Engineering and LLM Fine-Tuning</li>
     <li>AI Automation and Workflows</li>
+    <li>Dashboard Development</li>
     <li>Research Collaboration</li>
 </ul>
 
-<h2>Request a Quote</h2>
-<form id="contactForm" style="max-width:600px">
-    <div style="margin-bottom:16px">
-        <label style="display:block;font-size:.8rem;font-weight:700;margin-bottom:6px;color:#888;text-transform:uppercase;letter-spacing:.05em">Name</label>
-        <input type="text" name="name" required placeholder="Your name" style="width:100%;border:1px solid #ddd;border-radius:6px;padding:10px 14px;font-family:inherit;font-size:.9rem;outline:none">
-    </div>
-    <div style="margin-bottom:16px">
-        <label style="display:block;font-size:.8rem;font-weight:700;margin-bottom:6px;color:#888;text-transform:uppercase;letter-spacing:.05em">Email</label>
-        <input type="email" name="email" required placeholder="your@email.com" style="width:100%;border:1px solid #ddd;border-radius:6px;padding:10px 14px;font-family:inherit;font-size:.9rem;outline:none">
-    </div>
-    <div style="margin-bottom:16px">
-        <label style="display:block;font-size:.8rem;font-weight:700;margin-bottom:6px;color:#888;text-transform:uppercase;letter-spacing:.05em">Project Details</label>
-        <textarea name="message" required rows="5" placeholder="Tell me about your project..." style="width:100%;border:1px solid #ddd;border-radius:6px;padding:10px 14px;font-family:inherit;font-size:.9rem;outline:none;resize:vertical"></textarea>
-    </div>
-    <button type="submit" style="background:#0a0a0a;color:var(--accent);border:none;border-radius:6px;padding:12px 28px;font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s">Send Message</button>
-    <p id="formSuccess" style="display:none;color:var(--accent);font-size:.85rem;margin-top:10px">Thanks! I'll get back to you within 24 hours.</p>
-</form>
-
 </main>
-<script src="js/components.js"></script>
+<script src="js/components.js?v=3"></script>
 <script src="js/main.js"></script>
 <script>
 document.getElementById('contactForm').addEventListener('submit',function(e){
     e.preventDefault();
     var f=e.target;
-    var body='Name: '+f.name.value+'\nEmail: '+f.email.value+'\n\nMessage:\n'+f.message.value;
-    window.location.href='mailto:huzaifa@datascience.dev?subject=Project Inquiry&body='+encodeURIComponent(body);
-    document.getElementById('formSuccess').style.display='block';
+    var btn=f.querySelector('button[type="submit"]');
+    btn.textContent='Sending...';
+    btn.disabled=true;
+    fetch('/api/contact',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+            name:f.name.value,
+            email:f.email.value,
+            phone:f.countryCode.value+' '+f.phone.value,
+            service:f.service.value,
+            budget:f.budget.value,
+            message:f.message.value
+        })
+    })
+    .then(function(r){return r.json()})
+    .then(function(data){
+        if(data.success){
+            document.getElementById('formSuccess').style.display='block';
+            f.reset();
+        }else{
+            alert('Error sending message. Please try again.');
+        }
+        btn.textContent='Send Message';
+        btn.disabled=false;
+    })
+    .catch(function(){
+        alert('Error sending message. Please try again.');
+        btn.textContent='Send Message';
+        btn.disabled=false;
+    });
 });
 </script>
 </body>

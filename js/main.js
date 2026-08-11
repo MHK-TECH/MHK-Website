@@ -41,16 +41,21 @@
     setTimeout(function(){r.remove()},500);
   });
 
-  // Trail particles
+  // Trail particles (limited to prevent memory issues)
   var throttle=0;
+  var trailCount=0;
+  var MAX_TRAILS=10;
   document.addEventListener('mousemove',function(e){
+    if(window.innerWidth<900)return;
     throttle++;
-    if(throttle%2!==0)return;
+    if(throttle%3!==0)return;
+    if(trailCount>=MAX_TRAILS)return;
     var t=document.createElement('div');
     t.className='trail';
     t.style.left=e.clientX-1.5+'px';t.style.top=e.clientY-1.5+'px';
     document.body.appendChild(t);
-    setTimeout(function(){t.remove()},600);
+    trailCount++;
+    setTimeout(function(){t.remove();trailCount--;},600);
   });
 
   // Hover effects
