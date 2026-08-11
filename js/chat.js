@@ -3,32 +3,29 @@
   var API_ENDPOINT='/api/chat';
   var MODEL='openrouter/free';
 
-  // ── SYSTEM PROMPT: General + MHK knowledge ──
-  var SYSTEM=`You are a smart, friendly, and helpful AI assistant. You can answer ANY question on any topic — science, technology, history, math, coding, health, business, lifestyle, education, entertainment, etc. You are knowledgeable, conversational, and give clear, concise answers.
+  // ── SYSTEM PROMPT: MHK AI ──
+  var SYSTEM=`You are MHK AI — the smart assistant for M-HUZAIFA KHILJI's website. You answer any question: science, tech, coding, business, health, lifestyle, etc.
 
-You also work for M-HUZAIFA KHILJI's website. When visitors ask about him, his services, or want to hire someone for data science/AI work, you guide them professionally.
+CRITICAL RULES:
+- ALWAYS keep answers SHORT — max 3-5 bullet points
+- Use bullet points for every answer, not paragraphs
+- Be direct, no fluff, no introductions like "Great question!" or "Here's what I know"
+- Start directly with the answer
+- For MHK services, list them with prices
+- For general questions, give 3-5 key points max
 
-Key facts about M-HUZAIFA KHILJI:
-- Data Scientist, AI Engineer, Automation Specialist based in Lahore, Pakistan
-- Services:
-  1. Data Science ($90-135/hr) — dashboards, analytics, predictive modeling, data pipelines
-  2. AI Engineering ($120-200/hr) — LLM fine-tuning, RAG pipelines, chatbots, custom models
-  3. AI Automation ($120-200/hr) — n8n workflows, document processing, intelligent routing
-  4. SEO & AI Content ($80-150/hr) — technical SEO, keyword research, content optimization
-  5. WordPress ($60-120/hr) — custom themes, plugins, WooCommerce, speed optimization
-  6. n8n Automation ($100-180/hr) — self-hosted workflows, 400+ integrations
-- Tech: Python, JavaScript, PyTorch, TensorFlow, LangChain, n8n, Docker, React, Next.js, WordPress, SEO tools
-- Contact: mhktechnologies1.0@gmail.com | LinkedIn: linkedin.com/in/muhammad-huzaifa-khilji-955320159
+About M-HUZAIFA KHILJI:
+- Data Scientist, AI Engineer, Automation Specialist — Lahore, Pakistan
+- Services & Pricing:
+  • Data Science: $90-135/hr
+  • AI Engineering / LLM: $120-200/hr
+  • AI Automation / n8n: $120-200/hr
+  • SEO & AI Content: $80-150/hr
+  • WordPress: $60-120/hr
+  • n8n Workflows: $100-180/hr
+- Contact: mhktechnologies1.0@gmail.com
 - Payment: Visa, MasterCard, Payoneer
-
-RULES:
-- Answer any question the user asks — be helpful, accurate, and conversational
-- For general questions, give a clear and informative answer
-- For questions about MHK, services, pricing, or hiring, provide relevant info and guide them to the contact page
-- Keep responses concise but complete
-- Use a friendly, professional tone
-- If you don't know something, say so honestly
-- Use markdown formatting sparingly for readability`;
+- Response time: Within 24 hours`;
 
   // ── API CALL ──
   var chatHistory=[];
@@ -118,7 +115,7 @@ RULES:
       <div class="chat-head">
         <div class="avatar"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none"/><circle cx="12" cy="10" r="4" fill="none"/><path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6" fill="none"/></svg></div>
         <div class="info">
-          <div class="name">AI Assistant</div>
+          <div class="name">MHK AI</div>
           <div class="status">Online</div>
         </div>
         <div class="label">Ask me anything</div>
@@ -129,8 +126,8 @@ RULES:
         <button id="hSend"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
       </div>
       <div class="chat-footer">
-        <div class="powered">M-HUZAIFA KHILJI · AI Assistant</div>
-        <div>Try: "services" · "skills" · "contact"</div>
+        <div class="powered">M-HUZAIFA-KHILJI · MHK AI</div>
+        <div>Try: "services" · "pricing" · "contact"</div>
       </div>`;
 
     var hMsgs=document.getElementById('hMsgs');
@@ -169,7 +166,7 @@ RULES:
     }
 
     // Welcome
-    hAddBot('Hi! I\'m your AI assistant. Ask me anything — whether it\'s about M-HUZAIFA\'s services, or any general question. I\'m here to help!');
+    hAddBot('Hi! I\'m MHK AI. Ask me anything — services, pricing, coding, or any general question. I answer in short, clear points.');
 
     // Quick buttons
     var btnWrap=document.createElement('div');
@@ -177,12 +174,12 @@ RULES:
     setTimeout(function(){btnWrap.style.opacity='1'},800);
 
     var btns=[
-      {t:'What services do you offer?',q:'What services does MHK offer?'},
+      {t:'What services do you offer?',q:'What services and pricing does MHK offer?'},
       {t:'How can I contact you?',q:'How can I contact MHK?'},
-      {t:'What is AI?',q:'What is artificial intelligence?'},
-      {t:'Explain machine learning',q:'Explain machine learning in simple terms'},
-      {t:'Help me with Python',q:'How do I learn Python?'},
-      {t:'What is data science?',q:'What is data science?'}
+      {t:'What is AI?',q:'What is AI?'},
+      {t:'What is machine learning?',q:'What is machine learning?'},
+      {t:'How do I learn Python?',q:'How do I learn Python?'},
+      {t:'What is SEO?',q:'What is SEO?'}
     ];
 
     btns.forEach(function(b){
@@ -233,7 +230,7 @@ RULES:
       <div class="chat-head">
         <div class="avatar"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none"/><circle cx="12" cy="10" r="4" fill="none"/><path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6" fill="none"/></svg></div>
         <div class="info">
-          <div class="name">AI Assistant</div>
+          <div class="name">MHK AI</div>
           <div class="status">Online</div>
         </div>
       </div>
@@ -242,7 +239,7 @@ RULES:
         <input type="text" id="fIn" placeholder="Ask me anything..." autocomplete="off">
         <button id="fSend"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
       </div>
-      <div class="chat-footer">M-HUZAIFA KHILJI · AI Assistant</div>`;
+      <div class="chat-footer">M-HUZAIFA-KHILJI · MHK AI</div>`;
 
     document.body.appendChild(toggle);
     document.body.appendChild(box);
@@ -260,7 +257,7 @@ RULES:
         if(fMsgs.children.length===0){
           var d=document.createElement('div');d.className='msg bot';
           fMsgs.appendChild(d);
-          typeWrite(d,'Hi! Ask me about M-HUZAIFA\'s work, skills, or services.',18);
+          typeWrite(d,'Hi! I\'m MHK AI. Ask me anything — services, pricing, or any general question.',18);
         }
       }
     };
