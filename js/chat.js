@@ -185,9 +185,9 @@ About M-HUZAIFA KHILJI:
     btns.forEach(function(b){
       var el=document.createElement('button');
       el.textContent=b.t;
-      el.style.cssText='background:none;border:1px solid #ddd;border-radius:6px;padding:6px 12px;font-family:inherit;font-size:.75rem;color:#666;cursor:pointer;transition:all .2s;white-space:nowrap';
-      el.onmouseenter=function(){el.style.borderColor='var(--cyber)';el.style.color='var(--cyber)'};
-      el.onmouseleave=function(){el.style.borderColor='#ddd';el.style.color='#666'};
+      el.style.cssText='background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:8px 14px;font-family:inherit;font-size:.82rem;color:var(--text-muted);cursor:pointer;transition:all .2s;white-space:nowrap';
+      el.onmouseenter=function(){el.style.borderColor='var(--accent)';el.style.color='var(--accent)'};
+      el.onmouseleave=function(){el.style.borderColor='var(--border)';el.style.color='var(--text-muted)'};
       el.onclick=function(){
         btnWrap.remove();
         hSendMsg(b.q);
