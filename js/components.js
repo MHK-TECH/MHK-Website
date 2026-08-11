@@ -61,7 +61,7 @@
   var navHTML='<div class="header-inner">';
   navHTML+='<a href="'+base+'index.html" class="header-brand">';
   navHTML+='<img src="'+base+'logo.jpg" alt="MHK" width="36" height="36">';
-  navHTML+='<span>M-HUZAIFA KHILJI</span>';
+  navHTML+='<span>M-HUZAIFA-KHILJI</span>';
   navHTML+='</a>';
   navHTML+='<button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">';
   navHTML+='<span></span><span></span><span></span>';
@@ -123,7 +123,7 @@
   footerHTML+='<div class="footer-brand">';
   footerHTML+='<div class="footer-logo">';
   footerHTML+='<img src="'+base+'logo.jpg" alt="MHK" width="32" height="32">';
-  footerHTML+='<span>M-HUZAIFA KHILJI</span>';
+  footerHTML+='<span>M-HUZAIFA-KHILJI</span>';
   footerHTML+='</div>';
   footerHTML+='<p class="footer-tagline">Building AI systems, data pipelines, and smart automations that solve real problems.</p>';
   footerHTML+='<div class="footer-social">';
@@ -156,7 +156,7 @@
   footerHTML+='</ul></div>';
   footerHTML+='</div>';
   footerHTML+='<div class="footer-bottom">';
-  footerHTML+='<span>&copy; 2026 M-HUZAIFA KHILJI</span>';
+  footerHTML+='<span>&copy; 2026 M-HUZAIFA-KHILJI</span>';
   footerHTML+='<span class="footer-bottom-links">';
   footerHTML+='<a href="'+base+'contact.html">Contact</a>';
   footerHTML+='<a href="https://www.linkedin.com/in/muhammad-huzaifa-khilji-955320159/" target="_blank" rel="noopener">LinkedIn</a>';

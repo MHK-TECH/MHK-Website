@@ -63,10 +63,9 @@ def is_valid_email(email):
     return bool(re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email))
 
 FALLBACK_MODELS = [
-    'nvidia/nemotron-3-ultra-550b-a55b:free',
+    'openrouter/free',
     'nvidia/nemotron-3-super-120b-a12b:free',
-    'poolside/laguna-s-2.1:free',
-    'openrouter/free'
+    'nvidia/nemotron-3-ultra-550b-a55b:free',
 ]
 
 @app.route('/api/chat', methods=['POST'])
@@ -95,11 +94,11 @@ def chat():
             'temperature': 0.7
         }
         try:
-            r = requests.post(API_URL, headers=headers, json=payload, timeout=30)
+            r = requests.post(API_URL, headers=headers, json=payload, timeout=60)
             result = r.json()
             if result.get('choices'):
                 return jsonify(result)
-        except Exception:
+        except Exception as e:
             continue
 
     return jsonify({'error': 'All models unavailable'}), 503
