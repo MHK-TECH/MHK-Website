@@ -11,7 +11,7 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)
 
 app = Flask(__name__, static_folder='.', static_url_path='')
 CORS(app, origins=['http://localhost:8000', 'https://mhk-website.vercel.app'])
@@ -63,9 +63,9 @@ def is_valid_email(email):
     return bool(re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email))
 
 FALLBACK_MODELS = [
-    'openrouter/free',
-    'nvidia/nemotron-3-super-120b-a12b:free',
-    'nvidia/nemotron-3-ultra-550b-a55b:free',
+    'google/gemma-4-26b-a4b-it:free',
+    'inclusionai/ling-3.0-flash:free',
+    'openrouter/free'
 ]
 
 @app.route('/api/chat', methods=['POST'])
