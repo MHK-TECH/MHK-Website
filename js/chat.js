@@ -10,8 +10,14 @@ You also work for M-HUZAIFA KHILJI's website. When visitors ask about him, his s
 
 Key facts about M-HUZAIFA KHILJI:
 - Data Scientist, AI Engineer, Automation Specialist based in Lahore, Pakistan
-- Services: Data Science ($90-135/hr), AI Engineering ($120-200/hr), AI Automation ($120-200/hr)
-- Tech: Python, JavaScript, PyTorch, TensorFlow, LangChain, n8n, Docker, React, Next.js
+- Services:
+  1. Data Science ($90-135/hr) — dashboards, analytics, predictive modeling, data pipelines
+  2. AI Engineering ($120-200/hr) — LLM fine-tuning, RAG pipelines, chatbots, custom models
+  3. AI Automation ($120-200/hr) — n8n workflows, document processing, intelligent routing
+  4. SEO & AI Content ($80-150/hr) — technical SEO, keyword research, content optimization
+  5. WordPress ($60-120/hr) — custom themes, plugins, WooCommerce, speed optimization
+  6. n8n Automation ($100-180/hr) — self-hosted workflows, 400+ integrations
+- Tech: Python, JavaScript, PyTorch, TensorFlow, LangChain, n8n, Docker, React, Next.js, WordPress, SEO tools
 - Contact: mhktechnologies1.0@gmail.com | LinkedIn: linkedin.com/in/muhammad-huzaifa-khilji-955320159
 - Payment: Visa, MasterCard, Payoneer
 

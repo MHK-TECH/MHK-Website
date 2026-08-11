@@ -144,6 +144,9 @@
   footerHTML+='<li><a href="'+base+'services.html">Data Science</a></li>';
   footerHTML+='<li><a href="'+base+'services.html">AI Engineering</a></li>';
   footerHTML+='<li><a href="'+base+'services.html">AI Automation</a></li>';
+  footerHTML+='<li><a href="'+base+'services.html">SEO & Content</a></li>';
+  footerHTML+='<li><a href="'+base+'services.html">WordPress</a></li>';
+  footerHTML+='<li><a href="'+base+'services.html">n8n Workflows</a></li>';
   footerHTML+='<li><a href="'+base+'contact.html">Get a Quote</a></li>';
   footerHTML+='</ul></div>';
   footerHTML+='<div class="footer-contact">';
