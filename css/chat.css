@@ -65,3 +65,9 @@
   .chat-toggle{bottom:20px;right:20px}
   .chat-box{right:12px;left:12px;width:auto;bottom:80px;max-height:70vh}
 }
+
+/* ── Minimal footer / Copy notes ── */
+.hero-chat .chat-footer,.chat-box .chat-footer{justify-content:center;padding:10px 18px}
+.chat-act{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:8px 16px;font-family:inherit;font-size:.78rem;color:var(--text-muted);cursor:pointer;transition:all .2s}
+.chat-act:hover{border-color:var(--accent);color:var(--accent)}
+.chat-act:active{transform:scale(.97)}

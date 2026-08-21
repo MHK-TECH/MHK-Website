@@ -4,31 +4,39 @@
   var MODEL='openrouter/free';
 
   // ── SYSTEM PROMPT: MHK AI ──
-  var SYSTEM=`You are MHK AI — the smart assistant for M-HUZAIFA KHILJI's website. You answer any question: science, tech, coding, business, health, lifestyle, etc.
+  var SYSTEM=`You are MHK AI — the official assistant for M-HUZAIFA KHILJI (MHK), Data Scientist & AI Engineer based in Lahore, Pakistan.
 
-CRITICAL RULES:
-- ALWAYS keep answers SHORT — max 3-5 bullet points
-- Use bullet points for every answer, not paragraphs
-- Be direct, no fluff, no introductions like "Great question!" or "Here's what I know"
-- Start directly with the answer
-- For MHK services, list them with prices
-- For general questions, give 3-5 key points max
+SCOPE (strict): Only help with MHK's profile, services, pricing, and how to contact him. If asked anything else, politely say you only assist with MHK's services and contact, then invite them to share their project need.
 
-About M-HUZAIFA KHILJI:
-- Data Scientist, AI Engineer, Automation Specialist — Lahore, Pakistan
-- Services & Pricing:
-  • Data Science: $90-135/hr
-  • AI Engineering / LLM: $120-200/hr
-  • AI Automation / n8n: $120-200/hr
-  • SEO & AI Content: $80-150/hr
-  • WordPress: $60-120/hr
-  • n8n Workflows: $100-180/hr
-- Contact: huzaifa@mhktech.dev
-- Payment: Visa, MasterCard, Payoneer
-- Response time: Within 24 hours`;
+REPLY RULES (strict):
+- Normal answers: MAX 2 lines. Never write long paragraphs or essays.
+- Always answer in short BULLET POINTS.
+- No intro filler ("Great question!", "Sure!"). Start with the answer.
+- When the visitor describes a problem or requirement (a pain point), acknowledge in 1-2 bullets and say you've noted it for MHK — they can send it via the "Copy notes" button.
+
+MHK INFO:
+- Services & pricing:
+  • Data Science — $90-135/hr
+  • AI Engineering / LLM fine-tuning — $120-200/hr
+  • AI Automation / n8n — $120-200/hr
+  • SEO & AI Content — $80-150/hr
+  • WordPress — $60-120/hr
+  • n8n Workflows — $100-180/hr
+- Contact: huzaifa@mhktech.dev (replies within 24h)
+- Location: Lahore, Pakistan`;
 
   // ── API CALL ──
   var chatHistory=[];
+  function painSummary(){
+    var pts=chatHistory.filter(function(m){return m.role==='user'}).map(function(m){return '• '+m.content});
+    if(!pts.length) return 'No requirements discussed yet — chat with MHK AI to note your project needs.';
+    return 'My project requirements for MHK:\n\n'+pts.join('\n')+'\n\n— Sent via mhktech.dev (MHK AI)';
+  }
+  function copyPain(btn){
+    var txt=painSummary();
+    try{ navigator.clipboard.writeText(txt); }catch(e){}
+    if(btn){var old=btn.textContent;btn.textContent='✓ Copied!';setTimeout(function(){btn.textContent=old},1800);}
+  }
   function askAI(userMsg, onDone, onError){
     chatHistory.push({role:'user',content:userMsg});
     if(chatHistory.length>10) chatHistory=chatHistory.slice(-10);
@@ -63,7 +71,7 @@ About M-HUZAIFA KHILJI:
     services:['Here\'s what M-HUZAIFA does:\n\n• Data Science — dashboards, analytics, predictive modeling ($90-135/hr)\n• AI Engineering — LLM fine-tuning, RAG pipelines, chatbots ($120-200/hr)\n• AI Automation — n8n workflows, document processing ($120-200/hr)\n• Fixed Projects — custom quote\n\nEmail huzaifa@mhktech.dev for a quote.'],
     skills:['Tech stack: Python, JavaScript, TypeScript, SQL, PyTorch, TensorFlow, Hugging Face, LangChain, Django, FastAPI, React, Next.js, n8n, Docker, Airflow, PostgreSQL, MongoDB, Oracle.'],
     contact:['📧 huzaifa@mhktech.dev\n📍 Lahore, Pakistan\n🔗 linkedin.com/in/muhammad-huzaifa-khilji-955320159\n\nResponds within 24 hours.'],
-    default:['I can tell you about M-HUZAIFA\'s services, skills, blog, or how to contact him. What would you like to know?']
+    default:['I\'m MHK AI — I only help with M-HUZAIFA\'s services, pricing, and contact. Tell me your project need and I\'ll note it for him.']
   };
   var MAP=[
     {k:['hello','hi','hey','sup','yo','good morning'],r:'greeting'},
@@ -118,16 +126,14 @@ About M-HUZAIFA KHILJI:
           <div class="name">MHK AI</div>
           <div class="status">Online</div>
         </div>
-        <div class="label">Ask me anything</div>
       </div>
       <div class="chat-messages" id="hMsgs"></div>
       <div class="chat-input">
-        <input type="text" id="hIn" placeholder="Ask about my work, skills, services..." autocomplete="off">
+        <input type="text" id="hIn" placeholder="Ask about MHK's services, pricing, contact..." autocomplete="off">
         <button id="hSend"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
       </div>
       <div class="chat-footer">
-        <div class="powered">M-HUZAIFA-KHILJI · MHK AI</div>
-        <div>Try: "services" · "pricing" · "contact"</div>
+        <button id="hCopy" class="chat-act">📋 Copy my notes</button>
       </div>`;
 
     var hMsgs=document.getElementById('hMsgs');
@@ -166,7 +172,7 @@ About M-HUZAIFA KHILJI:
     }
 
     // Welcome
-    hAddBot('Hi! I\'m MHK AI. Ask me anything — services, pricing, coding, or any general question. I answer in short, clear points.');
+    hAddBot('Hi, I\'m MHK AI. Ask about MHK\'s services, pricing, or how to reach him. I answer in short points — and I\'ll note your project needs so you can send them over.');
 
     // Quick buttons
     var btnWrap=document.createElement('div');
@@ -174,12 +180,10 @@ About M-HUZAIFA KHILJI:
     setTimeout(function(){btnWrap.style.opacity='1'},800);
 
     var btns=[
-      {t:'What services do you offer?',q:'What services and pricing does MHK offer?'},
-      {t:'How can I contact you?',q:'How can I contact MHK?'},
-      {t:'What is AI?',q:'What is AI?'},
-      {t:'What is machine learning?',q:'What is machine learning?'},
-      {t:'How do I learn Python?',q:'How do I learn Python?'},
-      {t:'What is SEO?',q:'What is SEO?'}
+      {t:'Services & pricing',q:'What services and pricing do you offer?'},
+      {t:'How to contact you',q:'How can I contact MHK?'},
+      {t:'SEO & AI Content',q:'Tell me about your SEO & AI content service'},
+      {t:'AI Automation',q:'What AI automation do you build with n8n?'}
     ];
 
     btns.forEach(function(b){
@@ -215,6 +219,8 @@ About M-HUZAIFA KHILJI:
 
     hSend.onclick=function(){var t=hIn.value.trim();if(!t||hBusy)return;hIn.value='';hSendMsg(t)};
     hIn.onkeydown=function(e){if(e.key==='Enter'){var t=hIn.value.trim();if(!t||hBusy)return;hIn.value='';hSendMsg(t)}};
+    var hCopy=document.getElementById('hCopy');
+    if(hCopy)hCopy.onclick=function(){copyPain(hCopy)};
   }
 
   // ── FLOATING CHAT (other pages) ──
@@ -236,10 +242,12 @@ About M-HUZAIFA KHILJI:
       </div>
       <div class="chat-messages" id="fMsgs"></div>
       <div class="chat-input">
-        <input type="text" id="fIn" placeholder="Ask me anything..." autocomplete="off">
+        <input type="text" id="fIn" placeholder="Ask about MHK's services, contact..." autocomplete="off">
         <button id="fSend"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
       </div>
-      <div class="chat-footer">M-HUZAIFA-KHILJI · MHK AI</div>`;
+      <div class="chat-footer">
+        <button id="fCopy" class="chat-act">📋 Copy my notes</button>
+      </div>`;
 
     document.body.appendChild(toggle);
     document.body.appendChild(box);
@@ -257,7 +265,7 @@ About M-HUZAIFA KHILJI:
         if(fMsgs.children.length===0){
           var d=document.createElement('div');d.className='msg bot';
           fMsgs.appendChild(d);
-          typeWrite(d,'Hi! I\'m MHK AI. Ask me anything — services, pricing, or any general question.',18);
+          typeWrite(d,'Hi, I\'m MHK AI. Ask about MHK\'s services, pricing, or how to reach him.',18);
         }
       }
     };
@@ -297,5 +305,7 @@ About M-HUZAIFA KHILJI:
 
     fSend.onclick=function(){var t=fIn.value.trim();if(!t||fBusy)return;fIn.value='';fSendMsg(t)};
     fIn.onkeydown=function(e){if(e.key==='Enter'){var t=fIn.value.trim();if(!t||fBusy)return;fIn.value='';fSendMsg(t)}};
+    var fCopy=document.getElementById('fCopy');
+    if(fCopy)fCopy.onclick=function(){copyPain(fCopy)};
   }
 }();
