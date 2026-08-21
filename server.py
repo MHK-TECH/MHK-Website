@@ -147,7 +147,7 @@ def contact():
 
     msg = MIMEMultipart()
     msg['From'] = SMTP_EMAIL
-    msg['To'] = SMTP_EMAIL
+    msg['To'] = 'huzaifa@mhktech.dev'
     msg['Reply-To'] = email
     msg['Subject'] = f'New Contact Form: {service} from {name}'
 

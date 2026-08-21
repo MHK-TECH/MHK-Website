@@ -23,7 +23,7 @@ About M-HUZAIFA KHILJI:
   • SEO & AI Content: $80-150/hr
   • WordPress: $60-120/hr
   • n8n Workflows: $100-180/hr
-- Contact: mhktechnologies1.0@gmail.com
+- Contact: huzaifa@mhktech.dev
 - Payment: Visa, MasterCard, Payoneer
 - Response time: Within 24 hours`;
 
@@ -60,9 +60,9 @@ About M-HUZAIFA KHILJI:
   // ── FALLBACK KEYWORD MATCHING ──
   var KB={
     greeting:['Hey! Welcome to M-HUZAIFA KHILJI\'s site. I can tell you about his work, skills, services, or anything AI/data science. What interests you?'],
-    services:['Here\'s what M-HUZAIFA does:\n\n• Data Science — dashboards, analytics, predictive modeling ($90-135/hr)\n• AI Engineering — LLM fine-tuning, RAG pipelines, chatbots ($120-200/hr)\n• AI Automation — n8n workflows, document processing ($120-200/hr)\n• Fixed Projects — custom quote\n\nEmail mhktechnologies1.0@gmail.com for a quote.'],
+    services:['Here\'s what M-HUZAIFA does:\n\n• Data Science — dashboards, analytics, predictive modeling ($90-135/hr)\n• AI Engineering — LLM fine-tuning, RAG pipelines, chatbots ($120-200/hr)\n• AI Automation — n8n workflows, document processing ($120-200/hr)\n• Fixed Projects — custom quote\n\nEmail huzaifa@mhktech.dev for a quote.'],
     skills:['Tech stack: Python, JavaScript, TypeScript, SQL, PyTorch, TensorFlow, Hugging Face, LangChain, Django, FastAPI, React, Next.js, n8n, Docker, Airflow, PostgreSQL, MongoDB, Oracle.'],
-    contact:['📧 mhktechnologies1.0@gmail.com\n📍 Lahore, Pakistan\n🔗 linkedin.com/in/muhammad-huzaifa-khilji-955320159\n\nResponds within 24 hours.'],
+    contact:['📧 huzaifa@mhktech.dev\n📍 Lahore, Pakistan\n🔗 linkedin.com/in/muhammad-huzaifa-khilji-955320159\n\nResponds within 24 hours.'],
     default:['I can tell you about M-HUZAIFA\'s services, skills, blog, or how to contact him. What would you like to know?']
   };
   var MAP=[
