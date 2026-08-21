@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv(override=True)
 
 app = Flask(__name__, static_folder='.', static_url_path='')
-CORS(app, origins=['http://localhost:8000', 'https://mhk-website.vercel.app'])
+CORS(app, origins=['http://localhost:8000', 'https://mhktech.dev', 'https://www.mhktech.dev'])
 
 API_KEY = os.getenv('OPENROUTER_API_KEY')
 API_URL = 'https://openrouter.ai/api/v1/chat/completions'
@@ -104,7 +104,7 @@ def chat():
     headers = {
         'Content-Type': 'application/json',
         'Authorization': f'Bearer {API_KEY}',
-        'HTTP-Referer': request.headers.get('Origin', 'http://localhost:8000'),
+        'HTTP-Referer': request.headers.get('Origin', 'https://mhktech.dev'),
         'X-Title': 'MHK AI Assistant'
     }
 

@@ -5,4 +5,4 @@ Disallow: /.env
 Disallow: /server.py
 Disallow: /requirements.txt
 
-Sitemap: https://mhk-website.vercel.app/sitemap.xml
+Sitemap: https://www.mhktech.dev/sitemap.xml
