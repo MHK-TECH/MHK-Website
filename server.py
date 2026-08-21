@@ -7,7 +7,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from functools import wraps
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, Response
 from flask_cors import CORS
 from dotenv import load_dotenv
 
@@ -23,15 +23,37 @@ SMTP_PASSWORD = os.getenv('SMTP_PASSWORD')
 
 BLOCKED_FILES = ['.env', 'server.py', 'requirements.txt', '.git', '__pycache__', '.gitignore']
 
+# Vercel Web Analytics snippet (injected into every HTML page so all traffic is tracked)
+ANALYTICS_SNIPPET = '''<!-- Vercel Analytics -->
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+'''
+
+def serve_html(filename):
+    filepath = os.path.join('.', filename)
+    if not os.path.isfile(filepath):
+        return jsonify({'error': 'Not found'}), 404
+    with open(filepath, 'r', encoding='utf-8') as f:
+        content = f.read()
+    # Inject analytics once, before </head>, if not already present
+    if ANALYTICS_SNIPPET.strip() not in content and '</head>' in content:
+        content = content.replace('</head>', ANALYTICS_SNIPPET + '</head>', 1)
+    return Response(content, mimetype='text/html; charset=utf-8')
+
 @app.route('/')
 def index():
-    return send_from_directory('.', 'index.html')
+    return serve_html('index.html')
 
 @app.route('/<path:path>')
 def static_files(path):
     for blocked in BLOCKED_FILES:
         if path == blocked or path.startswith(blocked + '/') or path.startswith(blocked + '\\'):
             return jsonify({'error': 'Not found'}), 404
+    # HTML pages get the analytics snippet injected; everything else is served as-is
+    if path.endswith('.html'):
+        return serve_html(path)
     return send_from_directory('.', path)
 
 # Rate limiting
