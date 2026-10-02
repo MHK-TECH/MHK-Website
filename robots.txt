@@ -1,8 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /api/
-Disallow: /.env
-Disallow: /server.py
-Disallow: /requirements.txt
-
-Sitemap: https://www.mhktech.dev/sitemap.xml
