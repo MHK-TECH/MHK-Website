@@ -164,9 +164,7 @@ button[type="submit"]:active{transform:translateY(0)}
 .typing::after{content:'_';animation:blink .7s infinite;color:var(--blue)}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
-.cursor-dot,.cursor-ring,.trail{display:none}
-
-.icon{width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:6px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cursor-dot,.cursor-ring,.icon{width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:6px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
 .hero-section{padding:80px 0 60px;text-align:center;background:var(--bg-alt);margin:0 calc(-1 * var(--pad)) 48px;padding-left:var(--pad);padding-right:var(--pad)}
 .hero-section h1{font-size:clamp(2.2rem,5vw,3.25rem);margin-bottom:20px}
