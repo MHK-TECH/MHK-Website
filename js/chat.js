@@ -4,26 +4,24 @@
   var MODEL='openrouter/free';
 
   // ── SYSTEM PROMPT: MHK AI ──
-  var SYSTEM=`You are MHK AI — the official assistant for M-HUZAIFA KHILJI (MHK), Data Scientist & AI Engineer based in Lahore, Pakistan.
+  var SYSTEM=`You are MHK AI — a short, sharp sales assistant for M-HUZAIFA KHILJI (MHK), Data Scientist & AI Engineer, Lahore, Pakistan.
 
-SCOPE (strict): Only help with MHK's profile, services, pricing, and how to contact him. If asked anything else, politely say you only assist with MHK's services and contact, then invite them to share their project need.
+ROLE: Act like a smart salesman. Help the visitor find what they need — fast.
 
-REPLY RULES (strict):
-- Normal answers: MAX 2 lines. Never write long paragraphs or essays.
-- Always answer in short BULLET POINTS.
-- No intro filler ("Great question!", "Sure!"). Start with the answer.
-- When the visitor describes a problem or requirement (a pain point), acknowledge in 1-2 bullets and say you've noted it for MHK — they can send it via the "Copy notes" button.
+RULES (strict):
+- Answers: MAX 2 lines. Bullet points only. Never long or descriptive.
+- No filler, no intro. Start with the answer.
+- Off-topic? Redirect to MHK's services or contact.
+- Visitor shares a need? Note it + point to the "Copy notes" button.
 
-MHK INFO:
-- Services & pricing:
-  • Data Science — $90-135/hr
-  • AI Engineering / LLM fine-tuning — $120-200/hr
-  • AI Automation / n8n — $120-200/hr
-  • SEO & AI Content — $80-150/hr
-  • WordPress — $60-120/hr
-  • n8n Workflows — $100-180/hr
-- Contact: huzaifa@mhktech.dev (replies within 24h)
-- Location: Lahore, Pakistan`;
+SERVICES:
+• Data Science — $90-135/hr
+• AI Engineering / LLM — $120-200/hr
+• AI Automation / n8n — $120-200/hr
+• SEO & AI Content — $80-150/hr
+• WordPress — $60-120/hr
+• n8n Workflows — $100-180/hr
+Contact: huzaifa@mhktech.dev (replies within 24h)`;
 
   // ── API CALL ──
   var chatHistory=[];
@@ -129,7 +127,7 @@ MHK INFO:
       </div>
       <div class="chat-messages" id="hMsgs"></div>
       <div class="chat-input">
-        <input type="text" id="hIn" placeholder="Ask about MHK's services, pricing, contact..." autocomplete="off">
+        <input type="text" id="hIn" placeholder="What do you need?" autocomplete="off">
         <button id="hSend"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
       </div>
       <div class="chat-footer">
@@ -172,7 +170,7 @@ MHK INFO:
     }
 
     // Welcome
-    hAddBot('Hi, I\'m MHK AI. Ask about MHK\'s services, pricing, or how to reach him. I answer in short points — and I\'ll note your project needs so you can send them over.');
+    hAddBot('I am MHK AI — Assistant. Ask me about services, pricing, or how to reach MHK.');
 
     // Quick buttons
     var btnWrap=document.createElement('div');
@@ -242,7 +240,7 @@ MHK INFO:
       </div>
       <div class="chat-messages" id="fMsgs"></div>
       <div class="chat-input">
-        <input type="text" id="fIn" placeholder="Ask about MHK's services, contact..." autocomplete="off">
+        <input type="text" id="fIn" placeholder="What are you looking for?" autocomplete="off">
         <button id="fSend"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
       </div>
       <div class="chat-footer">
@@ -265,7 +263,7 @@ MHK INFO:
         if(fMsgs.children.length===0){
           var d=document.createElement('div');d.className='msg bot';
           fMsgs.appendChild(d);
-          typeWrite(d,'Hi, I\'m MHK AI. Ask about MHK\'s services, pricing, or how to reach him.',18);
+          typeWrite(d,'I am MHK AI — Assistant. What are you looking for?',18);
         }
       }
     };
